@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using ProductService.Definitions.Contracts;
 using ProductService.Features.Product.Commands.Create;
+using ProductService.Features.Product.Commands.Update;
 using ProductService.Features.Product.Queries.GetProductById;
 using ProductService.Features.Product.Queries.GetProducts;
 using ProductService.Request;
@@ -13,19 +14,22 @@ public class ProductEndpointDefinition : IEndpointDefinition
     {
         var product = app.MapGroup("/api/products");
 
-        product.MapGet("", GetProducts)
+        product.MapGet("/", GetProductsAsync)
             .WithTags("Products");
 
-        product.MapGet("/{id}", GetProductById)
+        product.MapGet("/{id}", GetProductByIdAsync)
             .WithTags("Products")
             .WithName("GetProductById");
 
-        product.MapPost("", CreateProduct)
+        product.MapPost("/", CreateProductAsync)
+            .WithTags("Products");
+
+        product.MapPut("/{id}", UpdateProductAsync)
             .WithTags("Products");
 
     }
 
-    private async Task<IResult> GetProducts(IMediator mediator)
+    private async Task<IResult> GetProductsAsync(IMediator mediator)
     {
         var request = new GetProductsRequest();
 
@@ -34,7 +38,7 @@ public class ProductEndpointDefinition : IEndpointDefinition
         return Results.Ok(result);
     }
 
-    private async Task<IResult> GetProductById(IMediator mediator,  Guid id)
+    private async Task<IResult> GetProductByIdAsync(IMediator mediator,  Guid id)
     {
         var request = new GetProductByIdRequest { Id = id };
 
@@ -43,23 +47,37 @@ public class ProductEndpointDefinition : IEndpointDefinition
         return Results.Ok(result);
     }
 
-    private async Task<IResult> CreateProduct(IMediator mediator, CreateProductRequest product)
+    private async Task<IResult> CreateProductAsync(IMediator mediator, CreateProductRequest product)
     {
         var request = new CreateProductCommand
         {
-            Id = Guid.Parse(product.Id),
             Name = product.Name,
             Description = product.Description,
             ImageUrl = product.ImageUrl,
-            BrandId = Guid.Parse(product.BrandId),
+            BrandId = product.BrandId,
             Price = product.Price,
-            CategoryId = Guid.Parse(product.CategoryId),
+            CategoryId = product.CategoryId,
             YearOfRelease = product.YearOfRelease
         };
 
-        var result = await mediator.Send(request);
+        var id = await mediator.Send(request);
 
-        return Results.CreatedAtRoute("GetProductById", result, request);
+        return Results.CreatedAtRoute("GetProductById", new {id}, new {id, request});
 
+    }
+
+    private async Task<IResult> UpdateProductAsync(IMediator mediator, Guid id, UpdateProductRequest product)
+    {
+        var request = new UpdateProductCommand
+        {
+            Id = id,
+            Name = product.Name,
+            Description = product.Description,
+            ImageUrl = product.ImageUrl
+        };
+
+        await mediator.Send(request);
+
+        return Results.NoContent();
     }
 }

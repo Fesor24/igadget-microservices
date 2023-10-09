@@ -15,10 +15,10 @@ public class BrandEndpointDefinition : IEndpointDefinition
 
         var brand = app.MapGroup("/api/brands");
 
-        brand.MapGet("", GetBrandsAsync)
+        brand.MapGet("/", GetBrandsAsync)
             .WithTags(TAGNAME);
 
-        brand.MapPost("", CreateBrandAsync)
+        brand.MapPost("/", CreateBrandAsync)
             .WithTags(TAGNAME);
 
         brand.MapGet("/{id}", GetBrandAsync)
@@ -39,13 +39,12 @@ public class BrandEndpointDefinition : IEndpointDefinition
     {
         var request = new CreateBrandCommand
         {
-            Id = Guid.Parse(brand.Id),
             Name = brand.Name
         };
 
         var id = await mediator.Send(request);
 
-        return Results.CreatedAtRoute("GetBrandById", id, request);
+        return Results.CreatedAtRoute("GetBrandById", new {id}, new {id, request.Name});
     }
 
     private async Task<IResult> GetBrandAsync(IMediator mediator, Guid id)
