@@ -3,18 +3,18 @@ using ProductService.Helper;
 
 namespace ProductService.Request;
 
-public class CreateBrandRequest
+public class CreateCategoryRequest
 {
     public string Name { get; set; }
 }
 
-public class CreateBrandRequestValidator : AbstractValidator<CreateBrandRequest>
+public class CreateCategoryRequestValidator : AbstractValidator<CreateCategoryRequest>
 {
-    public CreateBrandRequestValidator()
+    public CreateCategoryRequestValidator()
     {
         RuleFor(x => x.Name)
-            .NotNull()
             .NotEmpty()
+            .NotNull()
             .WithMessage("Name can not be null or empty");
     }
 }
