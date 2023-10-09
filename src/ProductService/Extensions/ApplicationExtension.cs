@@ -10,7 +10,7 @@ public static class ApplicationExtension
 {
     public static void AddApplicationServices(this IServiceCollection services, IConfiguration config)
     {
-        services.AddDbContext<ApplicationDbContext>(opt =>
+        services.AddDbContext<ProductDbContext>(opt =>
         {
             opt.UseNpgsql(config.GetConnectionString("DefaultConnection"));
         });
