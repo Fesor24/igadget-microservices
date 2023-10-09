@@ -23,7 +23,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             YearOfRelease = request.YearOfRelease,
             ImageUrl = request.ImageUrl,
             Price = request.Price,
-            Id = request.Id,
+            Id = Guid.NewGuid(),
             BrandId = request.BrandId
         };
 

@@ -4,7 +4,6 @@ namespace ProductService.Features.Product.Commands.Create;
 
 public class CreateProductCommand : IRequest<Guid>
 {
-    public Guid Id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
     public decimal Price { get; set; }
