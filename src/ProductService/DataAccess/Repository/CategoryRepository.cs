@@ -4,9 +4,9 @@ using ProductService.Entities;
 
 namespace ProductService.DataAccess.Repository;
 
-public class BrandRepository : GenericRepository<Brand>,IBrandRepository
+public class CategoryRepository : GenericRepository<Category>, ICategoryRepository
 {
-    public BrandRepository(ProductDbContext context) : base(context)
+    public CategoryRepository(ProductDbContext context) : base(context)
     {
         
     }

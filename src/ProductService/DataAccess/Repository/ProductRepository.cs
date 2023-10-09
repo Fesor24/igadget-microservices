@@ -7,9 +7,9 @@ namespace ProductService.DataAccess.Repository;
 
 public class ProductRepository : GenericRepository<Product>, IProductRepository
 {
-    private readonly ApplicationDbContext _context;
+    private readonly ProductDbContext _context;
 
-    public ProductRepository(ApplicationDbContext context) : base(context)
+    public ProductRepository(ProductDbContext context) : base(context)
     {
         _context = context;
     }
@@ -17,5 +17,12 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
     public async Task<Product> GetProductDetails(Guid id) =>
         await _context.Products.Where(x => x.Id == id)
             .Include(x => x.Category)
+            .Include(x => x.Brand)
             .FirstOrDefaultAsync();
+
+    public async Task<IReadOnlyList<Product>> GetProductsDetails() =>
+        await _context.Products
+            .Include(x => x.Category)
+            .Include(x => x.Brand)
+            .ToListAsync();
 }

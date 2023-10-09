@@ -6,9 +6,9 @@ namespace ProductService.DataAccess.Repository;
 
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
-    private readonly ApplicationDbContext _context;
+    private readonly ProductDbContext _context;
 
-    public GenericRepository(ApplicationDbContext context)
+    public GenericRepository(ProductDbContext context)
     {
         _context = context;
     }
