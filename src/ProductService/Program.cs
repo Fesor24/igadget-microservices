@@ -1,8 +1,6 @@
 var builder = WebApplication.CreateBuilder(args);
-
-
 var app = builder.Build();
 
-app.UseAuthorization();
+app.MapGet("/", () => "Hello World!");
 
 app.Run();
