@@ -17,11 +17,13 @@ public class CreateBrandCommandHandler : IRequestHandler<CreateBrandCommand, Gui
     {
         BrandEntity brand = new()
         {
-            Id = request.Id,
+            Id = Guid.NewGuid(),
             Name = request.Name
         };
 
         await _unitOfWork.BrandRepository.AddAsync(brand);
+
+        await _unitOfWork.Complete();
 
         return brand.Id;
     }
