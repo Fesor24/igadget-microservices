@@ -5,17 +5,19 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EB39C275-6399-403F-B3DE-85E12277CC77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductService", "src\ProductService\ProductService.csproj", "{F9AD01BC-BA54-4437-97A1-D8B5EE3E1A2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductService", "src\ProductService\ProductService.csproj", "{F9AD01BC-BA54-4437-97A1-D8B5EE3E1A2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "src\Shared\Shared.csproj", "{6F519020-2DD6-471D-BDEC-F2C22F3251DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "src\Shared\Shared.csproj", "{6F519020-2DD6-471D-BDEC-F2C22F3251DD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{28C6FC42-A86E-4088-9529-8425A714AEE3}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F9AD01BC-BA54-4437-97A1-D8B5EE3E1A2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -26,6 +28,9 @@ Global
 		{6F519020-2DD6-471D-BDEC-F2C22F3251DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F519020-2DD6-471D-BDEC-F2C22F3251DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F519020-2DD6-471D-BDEC-F2C22F3251DD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F9AD01BC-BA54-4437-97A1-D8B5EE3E1A2C} = {EB39C275-6399-403F-B3DE-85E12277CC77}
