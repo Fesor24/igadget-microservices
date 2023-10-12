@@ -8,3 +8,14 @@ public partial class ApiBadRequestException : Exception
 {
     public ApiBadRequestException(string message) : base(message) { }
 }
+
+public partial class ApiFluentValidationException : Exception
+{
+    public ApiFluentValidationException(IReadOnlyDictionary<string, string[]> errors): 
+        base("One or moe validation errors occurred")
+    {
+        Errors = errors;
+    }
+
+    public IReadOnlyDictionary<string, string[]> Errors { get; }
+}
