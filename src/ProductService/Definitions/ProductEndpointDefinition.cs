@@ -62,7 +62,7 @@ public class ProductEndpointDefinition : IEndpointDefinition
 
         var id = await mediator.Send(request);
 
-        return Results.CreatedAtRoute("GetProductById", new {id}, new {id, request});
+        return Results.CreatedAtRoute("GetProductById", new {id}, request);
 
     }
 
