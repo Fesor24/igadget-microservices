@@ -1,19 +1,28 @@
-using MongoDB.Driver;
-using MongoDB.Entities;
-using SearchService.Entities;
+using Polly;
+using Polly.Extensions.Http;
+using SearchService.Helper;
+using SearchService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddHttpClient<ProductHttpService>(opt =>
+{
+    opt.BaseAddress = new Uri(builder.Configuration["ProductServiceUrl"]);
+    opt.DefaultRequestHeaders.Add("Accept", "application/json");
+})
+    .AddPolicyHandler(GetPolicy());
+
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
-
-await DB.InitAsync("Search", MongoClientSettings.FromConnectionString(
-    app.Configuration.GetConnectionString("MongoDbConnection")));
-
-await DB.Index<Product>()
-    .Key(x => x.Name, KeyType.Text)
-    .Key(x => x.BrandName, KeyType.Text)
-    .Key(x => x.CategoryName, KeyType.Text)
-    .CreateAsync();
+app.Lifetime.ApplicationStarted.Register(async () =>
+{
+    await DbInitializer.InitDb(app);
+});
 
 app.Run();
+
+static IAsyncPolicy<HttpResponseMessage> GetPolicy() =>
+    HttpPolicyExtensions
+    .HandleTransientHttpError()
+    //.OrResult(res => res.StatusCode == System.Net.HttpStatusCode.NotFound) // If we wanted to deal, for instance, a not found error
+    .WaitAndRetryForeverAsync(_ => TimeSpan.FromSeconds(3));
