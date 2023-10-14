@@ -22,7 +22,12 @@ public static class DbInitializer
 
         var prdService = scope.ServiceProvider.GetRequiredService<ProductHttpService>();
 
-        var products = await  prdService.GetProducts();
+        var dbProducts = await DB.Find<Product>().ExecuteAsync();
+
+        if (dbProducts.Any())
+            return;
+
+        var products = await prdService.GetProducts();
 
         if (products is not null && products.Any())
         {
