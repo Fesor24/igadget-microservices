@@ -1,5 +1,6 @@
 using Polly;
 using Polly.Extensions.Http;
+using SearchService.Endpoints;
 using SearchService.Helper;
 using SearchService.Services;
 
@@ -18,6 +19,8 @@ app.Lifetime.ApplicationStarted.Register(async () =>
 {
     await DbInitializer.InitDb(app);
 });
+
+SearchEndpoint.Register(app);
 
 app.Run();
 
