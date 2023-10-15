@@ -1,14 +1,17 @@
-﻿using MediatR;
-using ProductService.Definitions.Contracts;
+﻿using AutoMapper;
+using MassTransit;
+using MediatR;
 using ProductService.Features.Product.Commands.Create;
+using ProductService.Features.Product.Commands.Delete;
 using ProductService.Features.Product.Commands.Update;
 using ProductService.Features.Product.Queries.GetProductById;
 using ProductService.Features.Product.Queries.GetProducts;
 using ProductService.Request;
+using Shared.Contracts;
 
 namespace ProductService.Definitions;
 
-public class ProductEndpointDefinition : IEndpointDefinition
+public class ProductEndpointDefinition : ProductService.Definitions.Contracts.IEndpointDefinition
 {
     public void RegisterEndpoints(WebApplication app)
     {
@@ -25,6 +28,9 @@ public class ProductEndpointDefinition : IEndpointDefinition
             .WithTags("Products");
 
         product.MapPut("/{id}", UpdateProductAsync)
+            .WithTags("Products");
+
+        product.MapDelete("/{id}", DeleteProductAsync)
             .WithTags("Products");
 
     }
@@ -47,22 +53,27 @@ public class ProductEndpointDefinition : IEndpointDefinition
         return Results.Ok(result);
     }
 
-    private async Task<IResult> CreateProductAsync(IMediator mediator, CreateProductRequest product)
+    private async Task<IResult> CreateProductAsync(IMediator mediator, CreateProductRequest productRequest,
+        IPublishEndpoint publishEndpoint, IMapper mapper)
     {
         var request = new CreateProductCommand
         {
-            Name = product.Name,
-            Description = product.Description,
-            ImageUrl = product.ImageUrl,
-            BrandId = product.BrandId,
-            Price = product.Price,
-            CategoryId = product.CategoryId,
-            YearOfRelease = product.YearOfRelease
+            Name = productRequest.Name,
+            Description = productRequest.Description,
+            ImageUrl = productRequest.ImageUrl,
+            BrandId = productRequest.BrandId,
+            Price = productRequest.Price,
+            CategoryId = productRequest.CategoryId,
+            YearOfRelease = productRequest.YearOfRelease
         };
 
         var id = await mediator.Send(request);
 
-        return Results.CreatedAtRoute("GetProductById", new {id}, request);
+        var product = await mediator.Send(new GetProductByIdRequest { Id = id });
+
+        await publishEndpoint.Publish(mapper.Map<ProductCreated>(product));
+
+        return Results.CreatedAtRoute("GetProductById", new {id}, product);
 
     }
 
@@ -77,6 +88,18 @@ public class ProductEndpointDefinition : IEndpointDefinition
         };
 
         await mediator.Send(request);
+
+        return Results.NoContent();
+    }
+
+    private async Task<IResult> DeleteProductAsync(IMediator mediator, Guid id, IPublishEndpoint publishEndpoint)
+    {
+        var result = await mediator.Send(new DeleteProductCommand(id));
+
+        if (result)
+        {
+            await publishEndpoint.Publish(new ProductDeleted { Id = id.ToString() });
+        }
 
         return Results.NoContent();
     }
