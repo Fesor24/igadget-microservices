@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using ProductService.DataAccess.Contracts;
+using Shared.Exceptions;
 using ProductEntity = ProductService.Entities.Product;
 
 namespace ProductService.Features.Product.Commands.Create;
@@ -29,7 +30,10 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 
         await _unitOfWork.ProductRepository.AddAsync(product);
 
-        await _unitOfWork.Complete();
+        var result = await _unitOfWork.Complete();
+
+        if (result < 1)
+            throw new ApiBadRequestException("An error occurred while saving changes to db");
 
         return product.Id;
     }
