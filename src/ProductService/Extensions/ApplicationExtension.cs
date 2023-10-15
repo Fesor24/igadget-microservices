@@ -1,4 +1,6 @@
 ﻿using FluentValidation;
+using MassTransit;
+using MassTransit.Configuration;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProductService.Behaviors;
@@ -32,6 +34,14 @@ public static class ApplicationExtension
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+        services.AddMassTransit(opt =>
+        {
+            opt.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.ConfigureEndpoints(context);
+            });
+        });
         
     }
 }
