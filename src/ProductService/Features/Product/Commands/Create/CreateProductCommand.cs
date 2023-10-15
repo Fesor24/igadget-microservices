@@ -1,9 +1,10 @@
 ﻿using FluentValidation;
 using MediatR;
+using ProductService.Response;
 
 namespace ProductService.Features.Product.Commands.Create;
 
-public sealed class CreateProductCommand : IRequest<Guid>
+public record CreateProductCommand : IRequest<GetProductResponse>
 {
     public string Name { get; set; }
     public string Description { get; set; }
