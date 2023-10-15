@@ -53,8 +53,7 @@ public class ProductEndpointDefinition : ProductService.Definitions.Contracts.IE
         return Results.Ok(result);
     }
 
-    private async Task<IResult> CreateProductAsync(IMediator mediator, CreateProductRequest productRequest,
-        IPublishEndpoint publishEndpoint, IMapper mapper)
+    private async Task<IResult> CreateProductAsync(IMediator mediator, CreateProductRequest productRequest)
     {
         var request = new CreateProductCommand
         {
@@ -67,13 +66,9 @@ public class ProductEndpointDefinition : ProductService.Definitions.Contracts.IE
             YearOfRelease = productRequest.YearOfRelease
         };
 
-        var id = await mediator.Send(request);
+        var product = await mediator.Send(request);
 
-        var product = await mediator.Send(new GetProductByIdRequest { Id = id });
-
-        await publishEndpoint.Publish(mapper.Map<ProductCreated>(product));
-
-        return Results.CreatedAtRoute("GetProductById", new {id}, product);
+        return Results.CreatedAtRoute("GetProductById", new {product.Id}, product);
 
     }
 
@@ -92,14 +87,9 @@ public class ProductEndpointDefinition : ProductService.Definitions.Contracts.IE
         return Results.NoContent();
     }
 
-    private async Task<IResult> DeleteProductAsync(IMediator mediator, Guid id, IPublishEndpoint publishEndpoint)
+    private async Task<IResult> DeleteProductAsync(IMediator mediator, Guid id)
     {
-        var result = await mediator.Send(new DeleteProductCommand(id));
-
-        if (result)
-        {
-            await publishEndpoint.Publish(new ProductDeleted { Id = id.ToString() });
-        }
+        await mediator.Send(new DeleteProductCommand(id));
 
         return Results.NoContent();
     }
