@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using MassTransit;
-using MassTransit.Configuration;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProductService.Behaviors;
+using ProductService.Consumers;
 using ProductService.Data;
 using ProductService.DataAccess.Contracts;
 using ProductService.DataAccess.Repository;
@@ -37,6 +37,19 @@ public static class ApplicationExtension
 
         services.AddMassTransit(opt =>
         {
+            opt.AddEntityFrameworkOutbox<ProductDbContext>(ef =>
+            {
+                ef.QueryDelay = TimeSpan.FromSeconds(10);
+
+                ef.UsePostgres();
+
+                ef.UseBusOutbox();
+            });
+
+            opt.AddConsumersFromNamespaceContaining<ProductCreatedFaultConsumer>();
+
+            opt.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("product", false));
+
             opt.UsingRabbitMq((context, cfg) =>
             {
                 cfg.ConfigureEndpoints(context);
