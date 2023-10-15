@@ -1,5 +1,7 @@
+using MassTransit;
 using Polly;
 using Polly.Extensions.Http;
+using SearchService.Consumers;
 using SearchService.Endpoints;
 using SearchService.Helper;
 using SearchService.Services;
@@ -12,6 +14,20 @@ builder.Services.AddHttpClient<ProductHttpService>(opt =>
     opt.DefaultRequestHeaders.Add("Accept", "application/json");
 })
     .AddPolicyHandler(GetPolicy());
+
+builder.Services.AddMassTransit(opt =>
+{
+    opt.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("search", false));
+
+    opt.AddConsumersFromNamespaceContaining<ProductCreatedConsumer>();
+
+    opt.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.ConfigureEndpoints(context);
+    });
+});
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 
