@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ProductService.Entities;
 using ProductService.Response;
+using Shared.Contracts;
 
 namespace ProductService.Helper;
 
@@ -15,5 +16,7 @@ public class MappingProfiles : Profile
         CreateMap<Brand, GetBrandResponse>();
 
         CreateMap<Category, GetCategoryResponse>();
+
+        CreateMap<GetProductResponse, ProductCreated>();
     }
 }
