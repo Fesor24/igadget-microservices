@@ -23,6 +23,17 @@ builder.Services.AddMassTransit(opt =>
 
     opt.UsingRabbitMq((context, cfg) =>
     {
+        // Applies to specific endpoint
+        cfg.ReceiveEndpoint("search-product-created", opt =>
+        {
+            // Add retry in case any error arises when consuming...
+            opt.UseMessageRetry(msg => msg.Interval(6, 6));
+
+            // Configure the consumer it should apply to
+            opt.ConfigureConsumer<ProductCreatedConsumer>(context);
+        });
+
+        // This applies to all endpoints
         cfg.ConfigureEndpoints(context);
     });
 });
