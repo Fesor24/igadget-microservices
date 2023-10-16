@@ -50,7 +50,8 @@ public sealed class CreateProductCommandHandler : IRequestHandler<CreateProductC
             YearOfRelease = product.YearOfRelease,
             ImageUrl = product.ImageUrl,
             Id = product.Id.ToString(),
-            Brand = brand.Name
+            Brand = brand.Name,
+            Price = product.Price,
         };
 
         await _publishEndpoint.Publish(_mapper.Map<ProductCreated>(productResponse));
