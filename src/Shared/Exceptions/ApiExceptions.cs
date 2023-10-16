@@ -9,6 +9,11 @@ public partial class ApiBadRequestException : Exception
     public ApiBadRequestException(string message) : base(message) { }
 }
 
+public partial class ApiNotAuthorizedException : Exception
+{
+    public ApiNotAuthorizedException(string message) : base(message) { }
+}
+
 public partial class ApiFluentValidationException : Exception
 {
     public ApiFluentValidationException(IReadOnlyDictionary<string, string[]> errors): 
