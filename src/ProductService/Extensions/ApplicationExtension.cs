@@ -39,7 +39,7 @@ public static class ApplicationExtension
         {
             opt.AddEntityFrameworkOutbox<ProductDbContext>(ef =>
             {
-                ef.QueryDelay = TimeSpan.FromSeconds(10);
+                ef.QueryDelay = TimeSpan.FromMinutes(5); // Query will run every 5 mins...to check for pending messages in the db
 
                 ef.UsePostgres();
 
