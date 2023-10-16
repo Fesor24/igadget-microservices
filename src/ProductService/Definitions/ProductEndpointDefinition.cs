@@ -1,13 +1,10 @@
-﻿using AutoMapper;
-using MassTransit;
-using MediatR;
+﻿using MediatR;
 using ProductService.Features.Product.Commands.Create;
 using ProductService.Features.Product.Commands.Delete;
 using ProductService.Features.Product.Commands.Update;
 using ProductService.Features.Product.Queries.GetProductById;
 using ProductService.Features.Product.Queries.GetProducts;
 using ProductService.Request;
-using Shared.Contracts;
 
 namespace ProductService.Definitions;
 
@@ -18,20 +15,25 @@ public class ProductEndpointDefinition : ProductService.Definitions.Contracts.IE
         var product = app.MapGroup("/api/products");
 
         product.MapGet("/", GetProductsAsync)
-            .WithTags("Products");
+            .WithTags("Products")
+            .RequireAuthorization();
 
         product.MapGet("/{id}", GetProductByIdAsync)
             .WithTags("Products")
-            .WithName("GetProductById");
+            .WithName("GetProductById")
+            .RequireAuthorization();
 
         product.MapPost("/", CreateProductAsync)
-            .WithTags("Products");
+            .WithTags("Products")
+            .RequireAuthorization();
 
         product.MapPut("/{id}", UpdateProductAsync)
-            .WithTags("Products");
+            .WithTags("Products")
+            .RequireAuthorization();
 
         product.MapDelete("/{id}", DeleteProductAsync)
-            .WithTags("Products");
+            .WithTags("Products")
+            .RequireAuthorization();
 
     }
 
