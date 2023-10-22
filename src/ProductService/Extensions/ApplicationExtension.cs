@@ -52,6 +52,12 @@ public static class ApplicationExtension
 
             opt.UsingRabbitMq((context, cfg) =>
             {
+                cfg.Host(config["RabbitMq:Host"], "/", host =>
+                {
+                    host.Username(config.GetValue("RabbitMq:Username", "guest"));
+                    host.Password(config.GetValue("RabbitMq:Password", "guest"));
+                });
+
                 cfg.ConfigureEndpoints(context);
             });
         });
