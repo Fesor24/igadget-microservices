@@ -23,6 +23,12 @@ builder.Services.AddMassTransit(opt =>
 
     opt.UsingRabbitMq((context, cfg) =>
     {
+        cfg.Host(builder.Configuration["RabbitMq:Host"], "/", host =>
+        {
+            host.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
+            host.Password(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
+        });
+
         // Applies to specific endpoint
         cfg.ReceiveEndpoint("search-product-created", opt =>
         {
