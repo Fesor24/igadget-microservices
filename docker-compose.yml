@@ -30,7 +30,60 @@ services:
     ports:
         - 5672:5672
         - 15672:15672
-    
+
+  product-svc:
+    image: fesor24/product-svc:latest
+    build:
+        context: .
+        dockerfile: src/ProductService/Dockerfile
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_URLS=http://+:80
+        - ConnectionStrings__DefaultConnection=Server=postgres:5522;User Id=postgres;Password=productpw;Database=products
+        - IdentityServerUrl=http://identity-svc
+        - RabbitMq__Host=rabbitmq
+    ports:
+        - 7001:80
+    depends_on:
+        - postgres
+        - rabbitmq
+
+  search-svc:
+    image: fesor24/search-svc:latest
+    build:
+        context: .
+        dockerfile: src/SearchService/Dockerfile
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_URLS=http://+:80
+        - ConnectionStrings__MongoDbConnection=mongodb://root:mongopw@mongo:27070
+        - ProductServiceUrl=http://product-svc
+        - SearchSrvAuthConfiguration__ClientId=search_service
+        - SearchSrvAuthConfiguration__ClientSecret=search-secret
+        - SearchSrvAuthConfiguration__GrantTypes=client_credentials
+        - Scope=productapi.read productapi.write
+        - IdentityServerUrl=http://identity-svc
+        - RabbitMq__Host=rabbitmq 
+    ports:
+        - 7002:80
+    depends_on:
+        - rabbitmq
+        - mongo
+  
+  identity-svc:
+    image: fesor24/identity-svc:latest
+    build: 
+        context: .
+        dockerfile: src/IdentityService/Dockerfile
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_URLS=http://+:80
+        - ConnectionStrings__DefaultConnection=Server=postgres:5522;User Id=postgres;Password=productpw;Database=identity
+    port:
+        - 5001:80
+    depends_on:
+        - postgres    
+     
 volumes:
     pgdata:
     mongodata:
