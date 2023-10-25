@@ -15,25 +15,20 @@ public class ProductEndpointDefinition : ProductService.Definitions.Contracts.IE
         var product = app.MapGroup("/api/products");
 
         product.MapGet("/", GetProductsAsync)
-            .WithTags("Products")
-            .RequireAuthorization();
+            .WithTags("Products");
 
         product.MapGet("/{id}", GetProductByIdAsync)
             .WithTags("Products")
-            .WithName("GetProductById")
-            .RequireAuthorization();
+            .WithName("GetProductById");
 
         product.MapPost("/", CreateProductAsync)
-            .WithTags("Products")
-            .RequireAuthorization();
+            .WithTags("Products");
 
         product.MapPut("/{id}", UpdateProductAsync)
-            .WithTags("Products")
-            .RequireAuthorization();
+            .WithTags("Products");
 
         product.MapDelete("/{id}", DeleteProductAsync)
-            .WithTags("Products")
-            .RequireAuthorization();
+            .WithTags("Products");
 
     }
 
