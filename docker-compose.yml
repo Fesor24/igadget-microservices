@@ -79,11 +79,21 @@ services:
         - ASPNETCORE_ENVIRONMENT=Development
         - ASPNETCORE_URLS=http://+:80
         - ConnectionStrings__DefaultConnection=Server=postgres:5522;User Id=postgres;Password=productpw;Database=identity
-    port:
-        - 5001:80
+    ports:
+        - 5000:80
     depends_on:
-        - postgres    
-     
+        - postgres
+
+  gateway-svc:
+    image: fesor24/gateway-svc:latest
+    build:
+        context: .
+        dockerfile: src/GatewayService/Dockerfile
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Docker
+        - ASPNETCORE_URLS=http://+:80
+    ports:
+        - 6001:80      
 volumes:
     pgdata:
     mongodata:
