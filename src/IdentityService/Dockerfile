@@ -9,7 +9,7 @@ COPY src/SearchService/SearchService.csproj src/SearchService/SearchService.cspr
 COPY src/GatewayService/GatewayService.csproj src/GatewayService/GatewayService.csproj
 COPY src/Shared/Shared.csproj src/Shared/Shared.csproj
 
-RUN dotnet restore IGadge.sln
+RUN dotnet restore IGadget.sln
 COPY src/IdentityService src/IdentityService
 
 WORKDIR /app/src/IdentityService
