@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM bitnami/dotnet-sdk:7 AS build
 WORKDIR /app
 EXPOSE 80
 
@@ -15,7 +15,7 @@ COPY src/IdentityService src/IdentityService
 WORKDIR /app/src/IdentityService
 RUN dotnet publish -c Release -o /app/src/out
 
-FROM mcr.microsoft.com/dotnet/aspnet:7.0
+FROM bitnami/aspnet-core:7
 WORKDIR /app
 COPY --from=build /app/src/out .
 
