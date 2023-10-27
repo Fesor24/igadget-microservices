@@ -7,6 +7,7 @@ COPY src/IdentityService/IdentityService.csproj src/IdentityService/IdentityServ
 COPY src/ProductService/ProductService.csproj src/ProductService/ProductService.csproj
 COPY src/SearchService/SearchService.csproj src/SearchService/SearchService.csproj
 COPY src/GatewayService/GatewayService.csproj src/GatewayService/GatewayService.csproj
+COPY src/ShoppingCartService/ShoppingCartService.csproj src/ShoppingCartService/ShoppingCartService.csproj
 COPY src/Shared/Shared.csproj src/Shared/Shared.csproj
 
 RUN dotnet restore IGadget.sln
