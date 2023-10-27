@@ -1,0 +1,23 @@
+FROM bitnami/dotnet-sdk:7 AS build
+WORKDIR /app
+EXPOSE 80
+
+COPY IGadget.sln IGadget.sln
+COPY src/ShoppingCartService/ShoppingCartService.csproj src/ShoppingCartService/ShoppingCartService.csproj
+COPY src/ProductService/ProductService.csproj src/ProductService/ProductService.csproj
+COPY src/GatewayService/GatewayService.csproj src/GatewayService/GatewayService.csproj
+COPY src/SearchService/SearchService.csproj src/SearchService/SearchService.csproj
+COPY src/Shared/Shared.csproj src/Shared/Shared.csproj
+COPY src/IdentityService/IdentityService.csproj src/IdentityService/IdentityService.csproj
+
+WORKDIR /app
+RUN dotnet restore IGadget.sln
+COPY src/ShoppingCartService src/ShoppingCartService
+
+WORKDIR /app/src/ShoppingCartService
+RUN dotnet publish -c Release -o /app/src/out
+
+FROM bitnami/aspnet-core:7
+WORKDIR /app
+COPY --from=build /app/src/out .
+ENTRYPOINT ["dotnet", "ShoppingCartService.dll"]
