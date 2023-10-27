@@ -30,6 +30,24 @@ services:
     ports:
         - 5672:5672
         - 15672:15672
+  redis:
+    image: redis:latest
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+        - 6379:6379 
+    volumes: 
+        - redisdata:/data
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+        - REDIS_HOSTS=local:redis:6379
+        - HTTP_USER=root
+        - HTTP_PASSWORD=secret 
+    ports:
+        - 8081:8081
+    depends_on:
+        - redis
 
   # product-svc:
   #   image: fesor24/product-svc:latest
@@ -92,7 +110,21 @@ services:
   #       - ASPNETCORE_ENVIRONMENT=Docker
   #       - ASPNETCORE_URLS=http://+:80
   #   ports:
-  #       - 6001:80      
+  #       - 6001:80 
+  # shoppingcart-svc: 
+  #     image: fesor24-cartsvc:latest
+  #     build:
+  #       context: .
+  #       dockerfile: src/ShoppingCartService/Dockerfile
+  #     environment:
+  #       - ASPNETCORE_ENVIRONMENT=Development
+  #       - ASPNETCORE_URLS=http://+:80
+  #       - ConnectionStrings__Redis=redis
+  #     ports:
+  #       - 7003:80
+  #     depends_on:
+  #       - redis    
 volumes:
     pgdata:
     mongodata:
+    redisdata:
