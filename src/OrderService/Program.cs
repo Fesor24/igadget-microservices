@@ -1,6 +1,9 @@
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+using OrderService.Extensions;
 
-app.MapGet("/", () => "Hello World!");
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.RegisterServices(builder.Configuration);
+
+var app = builder.Build();
 
 app.Run();
