@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OrderService.Data;
+using OrderService.Services.Contracts;
+using OrdSvc = OrderService.Services.Implementation.OrderService;
 
 namespace OrderService.Extensions;
 
@@ -13,5 +15,7 @@ public static class ApplicationExtensions
         {
             options.UseNpgsql(config.GetConnectionString("DefaultConnection"));
         });
+
+        services.AddScoped<IOrderService, OrdSvc>();
     }
 }
