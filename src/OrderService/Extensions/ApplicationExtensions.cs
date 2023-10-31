@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MassTransit;
+using Microsoft.EntityFrameworkCore;
+using OrderService.Consumers;
 using OrderService.Data;
 using OrderService.Services.Contracts;
 using OrdSvc = OrderService.Services.Implementation.OrderService;
@@ -17,5 +19,32 @@ public static class ApplicationExtensions
         });
 
         services.AddScoped<IOrderService, OrdSvc>();
+
+        services.AddHttpContextAccessor();
+
+        services.AddMassTransit(options =>
+        {
+            options.AddConsumersFromNamespaceContaining<ProductCreatedConsumer>();
+
+            options.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("order", false));
+
+            options.UsingRabbitMq((ctx, cfg) =>
+            {
+                cfg.Host(config["RabbitMq:Host"], host =>
+                {
+                    host.Username(config.GetValue(config["RabbitMq:Username"], "guest"));
+                    host.Password(config.GetValue(config["RabbitMq:Password"], "guest"));
+                });
+
+                cfg.ReceiveEndpoint("order-product-created", opt =>
+                {
+                    opt.UseMessageRetry(conf => conf.Interval(6, 6));
+
+                    opt.ConfigureConsumer<ProductCreatedConsumer>(ctx);
+                });
+
+                cfg.ConfigureEndpoints(ctx);
+            });
+        });
     }
 }
