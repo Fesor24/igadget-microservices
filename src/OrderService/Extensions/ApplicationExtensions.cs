@@ -10,7 +10,7 @@ namespace OrderService.Extensions;
 
 public static class ApplicationExtensions
 {
-    public static void RegisterServices(this IServiceCollection services, IConfiguration config)
+    public static void RegisterApplicationServices(this IServiceCollection services, IConfiguration config)
     {
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
