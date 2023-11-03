@@ -1,4 +1,5 @@
 ﻿using Duende.IdentityServer.Models;
+using IdentityModel;
 
 namespace IdentityService;
 
@@ -8,7 +9,7 @@ public static class Config
         new IdentityResource[]
         {
             new IdentityResources.OpenId(),
-            new IdentityResources.Profile(),
+            new IdentityResources.Profile()
         };
 
     public static IEnumerable<ApiResource> ApiResources =>
@@ -17,6 +18,10 @@ public static class Config
             new ApiResource("productapi", "Product Api")
             {
                 Scopes = new []{"productapi.read", "productapi.write"}
+            },
+            new ApiResource("orderapi", "Order Api")
+            {
+                Scopes = new[]{"orderapi.full"}
             }
         };
 
@@ -25,6 +30,7 @@ public static class Config
         {
             new ApiScope("productapi.read", "Product Api Read"),
             new ApiScope("productapi.write", "Product Api Write"),
+            new ApiScope("orderapi.full", "Order Api Full Access")
         };
 
     public static IEnumerable<Client> Clients =>
@@ -37,24 +43,31 @@ public static class Config
                 ClientName = "Search Service",
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
                 ClientSecrets = { new Secret("search-secret".Sha256()) },
-
                 AllowedScopes = { "productapi.read", "productapi.write" },
+            },
+
+            // for angular application
+            new Client
+            {
+                ClientId = "order_service",
+                ClientName = "Order Service",
+                ClientSecrets = { new Secret("order-secret".Sha256()) },
+                AllowedGrantTypes = GrantTypes.Code,
+                RedirectUris = { "http://localhost:4200/signin-oidc" },
+                PostLogoutRedirectUris = { "https://localhost:4200/signout-callback-oidc" },
+                AllowOfflineAccess = true,
+                AllowedScopes = { "openid", "profile", "orderapi.full" }
+            },
+
+            // To test order-svc on postman
+            new Client
+            {
+                ClientId = "order_svc_postman",
+                ClientName = "Order Svc Postman",
+                ClientSecrets = {new Secret("order-svc".Sha256())},
+                AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                AllowedScopes = {"openid", "profile", "orderapi.full"},
+                AlwaysIncludeUserClaimsInIdToken = true,
             }
-
-            // interactive client using code flow + pkce
-            //new Client
-            //{
-            //    ClientId = "interactive",
-            //    ClientSecrets = { new Secret("49C1A7E1-0C79-4A89-A3D6-A37998FB86B0".Sha256()) },
-
-            //    AllowedGrantTypes = GrantTypes.Code,
-
-            //    RedirectUris = { "https://localhost:44300/signin-oidc" },
-            //    FrontChannelLogoutUri = "https://localhost:44300/signout-oidc",
-            //    PostLogoutRedirectUris = { "https://localhost:44300/signout-callback-oidc" },
-
-            //    AllowOfflineAccess = true,
-            //    AllowedScopes = { "openid", "profile", "scope2" }
-            //},
         };
 }
