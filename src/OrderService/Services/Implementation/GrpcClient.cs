@@ -2,6 +2,7 @@
 using OrderService.Entities;
 using OrderService.Models;
 using OrderService.Services.Contracts;
+using ProductService;
 using ShoppingCartService;
 using System.Text.Json;
 
@@ -20,12 +21,41 @@ public class GrpcClient : IGrpcClient
 
     public Product GetProduct(string id)
     {
-        throw new NotImplementedException();
+        var channel = GrpcChannel.ForAddress(_config["Grpc:Product"]);
+
+        var client = new GrpcProduct.GrpcProductClient(channel);
+
+        var request = new GetProductRequest { Id = id };
+
+        try
+        {
+            var response = client.GetProduct(request);
+
+            _logger.LogInformation("Grpc Product Response: {response}", JsonSerializer.Serialize(response));
+
+            return new Product
+            {
+                Brand = response.Brand,
+                Category = response.Category,
+                ImageUrl = response.ImageUrl,
+                Price = (decimal)response.Price,
+                Id = Guid.Parse(response.Id),
+                Name = response.Name
+            };
+        }
+
+        catch(Exception ex)
+        {
+            _logger.LogError($"An error occurred while sending a request to grpc server. Message: {ex.Message}" +
+               $"Details: {ex.StackTrace}");
+
+            return null;
+        }
     }
 
     public ShoppingCart GetShoppingCart(string id)
     {
-        var channel = GrpcChannel.ForAddress(_config["GrpcCart"]);
+        var channel = GrpcChannel.ForAddress(_config["Grpc:Cart"]);
 
         var client = new GrpcCart.GrpcCartClient(channel);
 
