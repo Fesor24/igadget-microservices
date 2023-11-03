@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option csharp_namespace = "ProductService";
+
+service GrpcProduct{
+	rpc GetProduct(GetProductRequest) returns (GrpcProductResponse);
+}
+
+message GetProductRequest{
+	string id = 1;
+}
+
+message GrpcProductResponse{
+	string id = 1;
+	string name = 2;
+	float price = 3;
+	string brand = 4;
+	string category = 5;
+	string imageUrl = 6;
+}
