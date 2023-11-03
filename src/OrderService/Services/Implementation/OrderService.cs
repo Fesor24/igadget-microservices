@@ -9,10 +9,12 @@ namespace OrderService.Services.Implementation;
 public class OrderService : IOrderService
 {
     private readonly OrderDbContext _context;
+    private readonly IGrpcClient _grpcClient;
 
-    public OrderService(OrderDbContext context)
+    public OrderService(OrderDbContext context, IGrpcClient grpcClient)
     {
         _context = context;
+        _grpcClient = grpcClient;
     }
 
     public Task<Order> CreateOrderAsync(CreateOrderRequest orderRequest)
