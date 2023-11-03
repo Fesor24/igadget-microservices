@@ -61,6 +61,8 @@ public static class ApplicationExtension
                 cfg.ConfigureEndpoints(context);
             });
         });
+
+        services.AddGrpc();
         
     }
 }
