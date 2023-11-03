@@ -1,4 +1,5 @@
 using ProductService.Extensions;
+using ProductService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,5 +18,7 @@ app.ConfigureExceptionHandler();
 //app.UseAuthorization();
 
 app.RegisterEndpoints();
+
+app.MapGrpcService<GrpcProductService>();
 
 app.Run();
