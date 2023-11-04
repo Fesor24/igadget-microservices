@@ -21,6 +21,8 @@ public static class ApplicationExtensions
 
         services.AddScoped<IOrderService, OrdSvc>();
 
+        services.AddScoped<IDeliveryMethodService, DeliveryMethodService>();
+
         services.AddHttpContextAccessor();
 
         services.AddMassTransit(options =>
@@ -49,5 +51,7 @@ public static class ApplicationExtensions
         });
 
         services.AddScoped<IGrpcClient, GrpcClient>();
+
+        services.AddHttpContextAccessor();
     }
 }
