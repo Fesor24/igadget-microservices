@@ -68,6 +68,7 @@ public static class Config
                 AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                 AllowedScopes = {"openid", "profile", "orderapi.full"},
                 AlwaysIncludeUserClaimsInIdToken = true,
+                AccessTokenLifetime = 3600 * 24
             }
         };
 }
