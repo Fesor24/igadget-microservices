@@ -4,6 +4,7 @@ option csharp_namespace = "ShoppingCartService";
 
 service GrpcCart{
 	rpc GetCart(GetCartRequest) returns (GrpcCartResponse);
+	rpc DeleteCart(GetCartRequest) returns (GrpcDeleteCartResponse);
 }
 
 message GetCartRequest{
@@ -24,4 +25,8 @@ message GrpcCartModel{
 
 message GrpcCartResponse{
 	GrpcCartModel cart = 1;
+}
+
+message GrpcDeleteCartResponse{
+	bool cartDeleted = 1;
 }
