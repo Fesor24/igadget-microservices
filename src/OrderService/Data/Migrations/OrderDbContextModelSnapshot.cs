@@ -135,7 +135,7 @@ namespace OrderService.Data.Migrations
                         .WithMany()
                         .HasForeignKey("DeliveryMethodId");
 
-                    b.OwnsOne("OrderService.Entities.OrderAggregate.Address", "DeliveryAddress", b1 =>
+                    b.OwnsOne("OrderService.Entities.OrderAggregate.Order.DeliveryAddress#OrderService.Entities.OrderAggregate.Address", "DeliveryAddress", b1 =>
                         {
                             b1.Property<Guid>("OrderId")
                                 .HasColumnType("uuid");
@@ -173,7 +173,7 @@ namespace OrderService.Data.Migrations
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.OwnsOne("OrderService.Entities.OrderAggregate.ProductItemOrdered", "ItemOrdered", b1 =>
+                    b.OwnsOne("OrderService.Entities.OrderAggregate.OrderItem.ItemOrdered#OrderService.Entities.OrderAggregate.ProductItemOrdered", "ItemOrdered", b1 =>
                         {
                             b1.Property<Guid>("OrderItemId")
                                 .HasColumnType("uuid");
