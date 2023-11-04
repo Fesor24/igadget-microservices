@@ -45,4 +45,11 @@ public class GrpcCartService : GrpcCart.GrpcCartBase
 
         return response;
     }
+
+    public override async Task<GrpcDeleteCartResponse> DeleteCart(GetCartRequest request, ServerCallContext context) =>
+        new GrpcDeleteCartResponse
+        {
+            CartDeleted = await _shoppingCart.DeleteCartAsync(request.Id)
+        };
+        
 }
