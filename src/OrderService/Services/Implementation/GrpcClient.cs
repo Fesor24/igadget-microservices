@@ -19,6 +19,30 @@ public class GrpcClient : IGrpcClient
         _logger = logger;
     }
 
+    public bool DeleteCart(string id)
+    {
+        var channel = GrpcChannel.ForAddress(_config["Grpc:Cart"]);
+
+        var client = new GrpcCart.GrpcCartClient(channel);
+
+        var request = new GetCartRequest { Id = id };
+
+        try
+        {
+            var result = client.DeleteCart(request);
+
+            return result.CartDeleted;
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError($"An error occurred while sending a request to grpc server. Message: {ex.Message}" +
+                $"Details: {ex.StackTrace}");
+
+            return false;
+        }
+    }
+
+
     public Product GetProduct(string id)
     {
         var channel = GrpcChannel.ForAddress(_config["Grpc:Product"]);

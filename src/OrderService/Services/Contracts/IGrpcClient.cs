@@ -7,4 +7,5 @@ public interface IGrpcClient
 {
     ShoppingCart GetShoppingCart(string id);
     Product GetProduct(string id);
+    bool DeleteCart(string id);
 }
