@@ -1,4 +1,3 @@
-using OrderService.Endpoints;
 using OrderService.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +12,6 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-OrderEndpointDefinition.RegisterEndpoints(app);
+EndpointExtensions.RegisterApplicationEndpoints(app);
 
 app.Run();
