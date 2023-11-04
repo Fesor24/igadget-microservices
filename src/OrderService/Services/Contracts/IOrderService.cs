@@ -1,13 +1,14 @@
 ﻿using OrderService.Entities.OrderAggregate;
 using OrderService.Requests;
+using OrderService.Response;
 
 namespace OrderService.Services.Contracts;
 
 public interface IOrderService
 {
-    Task<Order> CreateOrderAsync(CreateOrderRequest orderRequest);
+    Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest orderRequest);
 
-    Task<IReadOnlyList<Order>> GetOrdersForUserAsync(string buyerEmail);
+    Task<IReadOnlyList<GetOrderResponse>> GetOrdersForUserAsync();
 
-    Task<Order> GetOrderByIdAsync(string id);
+    Task<GetOrderResponse> GetOrderByIdAsync(Guid id);
 }
