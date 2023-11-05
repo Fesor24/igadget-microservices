@@ -9,6 +9,7 @@ COPY src/GatewayService/GatewayService.csproj src/GatewayService/GatewayService.
 COPY src/SearchService/SearchService.csproj src/SearchService/SearchService.csproj
 COPY src/Shared/Shared.csproj src/Shared/Shared.csproj
 COPY src/IdentityService/IdentityService.csproj src/IdentityService/IdentityService.csproj
+COPY src/OrderService/OrderService.csproj src/OrderService/OrderService.csproj
 
 WORKDIR /app
 RUN dotnet restore IGadget.sln
