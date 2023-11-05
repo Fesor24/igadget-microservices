@@ -1,4 +1,4 @@
-FROM bitnami/dotnet-sdk:7 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /app
 EXPOSE 80
 
@@ -18,7 +18,7 @@ COPY src/ShoppingCartService src/ShoppingCartService
 WORKDIR /app/src/ShoppingCartService
 RUN dotnet publish -c Release -o /app/src/out
 
-FROM bitnami/aspnet-core:7
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
 COPY --from=build /app/src/out .
 ENTRYPOINT ["dotnet", "ShoppingCartService.dll"]
