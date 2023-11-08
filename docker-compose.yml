@@ -49,81 +49,112 @@ services:
     depends_on:
         - redis
 
-  # product-svc:
-  #   image: fesor24/product-svc:latest
-  #   build:
-  #       context: .
-  #       dockerfile: src/ProductService/Dockerfile
-  #   environment:
-  #       - ASPNETCORE_ENVIRONMENT=Development
-  #       - ASPNETCORE_URLS=http://+:80
-  #       - ConnectionStrings__DefaultConnection=Server=postgres:5522;User Id=postgres;Password=productpw;Database=products
-  #       - RabbitMq__Host=rabbitmq
-  #   ports:
-  #       - 7001:80
-  #   depends_on:
-  #       - postgres
-  #       - rabbitmq
+  product-svc:
+    image: fesor24/product-svc:latest
+    build:
+        context: .
+        dockerfile: src/ProductService/Dockerfile
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_URLS=http://+:80
+        - ASPNETCORE_URLS=http://+:8888 
+        - ConnectionStrings__DefaultConnection=Server=postgres:5522;User Id=postgres;Password=productpw;Database=products
+        - RabbitMq__Host=rabbitmq
+        - Kestrel__Endpoints__Grpc__Protocols=Http2
+        - Kestrel__Endpoints__Grpc__Url=http://+:8888
+        - Kestrel__Endpoints__WebApi__Protocols=Http1
+        - Kestrel__Endpoints__WebApi__Url=http://+:80  
+    ports:
+        - 7001:80
+        - 8888:8888 
+    depends_on:
+        - postgres
+        - rabbitmq
 
-  # search-svc:
-  #   image: fesor24/search-svc:latest
-  #   build:
-  #       context: .
-  #       dockerfile: src/SearchService/Dockerfile
-  #   environment:
-  #       - ASPNETCORE_ENVIRONMENT=Development
-  #       - ASPNETCORE_URLS=http://+:80
-  #       - ConnectionStrings__MongoDbConnection=mongodb://root:mongopw@mongo:27070
-  #       - ProductServiceUrl=http://product-svc
-  #       - SearchSrvAuthConfiguration__ClientId=search_service
-  #       - SearchSrvAuthConfiguration__ClientSecret=search-secret
-  #       - SearchSrvAuthConfiguration__GrantTypes=client_credentials
-  #       - Scope=productapi.read productapi.write
-  #       - IdentityServerUrl=http://identity-svc
-  #       - RabbitMq__Host=rabbitmq 
-  #   ports:
-  #       - 7002:80
-  #   depends_on:
-  #       - rabbitmq
-  #       - mongo
+  search-svc:
+    image: fesor24/search-svc:latest
+    build:
+        context: .
+        dockerfile: src/SearchService/Dockerfile
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_URLS=http://+:80
+        - ConnectionStrings__MongoDbConnection=mongodb://root:mongopw@mongo:27070
+        - ProductServiceUrl=http://product-svc
+        - SearchSrvAuthConfiguration__ClientId=search_service
+        - SearchSrvAuthConfiguration__ClientSecret=search-secret
+        - SearchSrvAuthConfiguration__GrantTypes=client_credentials
+        - Scope=productapi.read productapi.write
+        - IdentityServerUrl=http://identity-svc
+        - RabbitMq__Host=rabbitmq 
+    ports:
+        - 7002:80
+    depends_on:
+        - rabbitmq
+        - mongo
   
-  # identity-svc:
-  #   image: fesor24/identity-svc:latest
-  #   build: 
-  #       context: .
-  #       dockerfile: src/IdentityService/Dockerfile
-  #   environment:
-  #       - ASPNETCORE_ENVIRONMENT=Development
-  #       - ASPNETCORE_URLS=http://+:80
-  #       - ConnectionStrings__DefaultConnection=Server=postgres:5522;User Id=postgres;Password=productpw;Database=identity
-  #   ports:
-  #       - 5000:80
-  #   depends_on:
-  #       - postgres
+  identity-svc:
+    image: fesor24/identity-svc:latest
+    build: 
+        context: .
+        dockerfile: src/IdentityService/Dockerfile
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_URLS=http://+:80
+        - ConnectionStrings__DefaultConnection=Server=postgres:5522;User Id=postgres;Password=productpw;Database=identity
+    ports:
+        - 5000:80
+    depends_on:
+        - postgres
 
-  # gateway-svc:
-  #   image: fesor24/gateway-svc:latest
-  #   build:
-  #       context: .
-  #       dockerfile: src/GatewayService/Dockerfile
-  #   environment:
-  #       - ASPNETCORE_ENVIRONMENT=Docker
-  #       - ASPNETCORE_URLS=http://+:80
-  #   ports:
-  #       - 6001:80 
-  # shoppingcart-svc: 
-  #     image: fesor24-cartsvc:latest
-  #     build:
-  #       context: .
-  #       dockerfile: src/ShoppingCartService/Dockerfile
-  #     environment:
-  #       - ASPNETCORE_ENVIRONMENT=Development
-  #       - ASPNETCORE_URLS=http://+:80
-  #       - ConnectionStrings__Redis=redis
-  #     ports:
-  #       - 7003:80
-  #     depends_on:
-  #       - redis    
+  gateway-svc:
+    image: fesor24/gateway-svc:latest
+    build:
+        context: .
+        dockerfile: src/GatewayService/Dockerfile
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Docker
+        - ASPNETCORE_URLS=http://+:80  
+    ports:
+        - 6001:80 
+  shoppingcart-svc: 
+      image: fesor24-cartsvc:latest
+      build:
+        context: .
+        dockerfile: src/ShoppingCartService/Dockerfile
+      environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_URLS=http://+:80
+        - ASPNETCORE_URLS=http://+:7777 
+        - ConnectionStrings__Redis=redis
+        - Kestrel__Endpoints__Grpc__Protocols=Http2
+        - Kestrel__Endpoints__Grpc__Url=http://+:7777
+        - Kestrel__Endpoints__WebApi__Protocols=Http1
+        - Kestrel__Endpoints__WebApi__Url=http://+:80 
+      ports:
+        - 7003:80
+        - 7777:7777 
+      depends_on:
+        - redis   
+  order-svc:
+       image: fesor24-ordersvc:latest
+       build:
+         context: .
+         dockerfile: src/OrderService/Dockerfile
+       environment:
+          - ASPNETCORE_ENVIRONMENT=Development
+          - ASPNETCORE_URLS=http://+:80
+          - ConnectionStrings__DefaultConnection=Server=postgres:5522;User Id=postgres;Password=productpw;Database=orders
+          - Grpc__Cart=http://shoppingcart-svc:7777
+          - Grpc__Product=http://product-svc:8888
+          - RabbitMq__Host=rabbitmq
+          - IdentityServiceUrl=http://identity-svc
+       ports:
+          - 7004:80
+       depends_on:
+          - rabbitmq
+          - postgres
+          
 volumes:
     pgdata:
     mongodata:
