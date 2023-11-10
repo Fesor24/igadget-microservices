@@ -9,7 +9,6 @@ COPY src/IdentityService/IdentityService.csproj src/IdentityService/IdentityServ
 COPY src/GatewayService/GatewayService.csproj src/GatewayService/GatewayService.csproj
 COPY src/ShoppingCartService/ShoppingCartService.csproj src/ShoppingCartService/ShoppingCartService.csproj
 COPY src/OrderService/OrderService.csproj src/OrderService/OrderService.csproj
-COPY src/DiscountService/DiscountService.csproj src/DiscountService/DiscountService.csproj
 COPY src/Shared/Shared.csproj src/Shared/Shared.csproj
 
 WORKDIR /app
