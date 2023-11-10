@@ -11,6 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "src\Shared\Shared
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{28C6FC42-A86E-4088-9529-8425A714AEE3}"
 	ProjectSection(SolutionItems) = preProject
+		deploy.cmd = deploy.cmd
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
@@ -18,13 +19,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SearchService", "src\Search
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityService", "src\IdentityService\IdentityService.csproj", "{8D2776D8-851D-4EAF-BDFE-33C702D06CD3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GatewayService", "src\GatewayService\GatewayService.csproj", "{273816E1-38F1-47BA-9F9E-5271317F0519}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GatewayService", "src\GatewayService\GatewayService.csproj", "{273816E1-38F1-47BA-9F9E-5271317F0519}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingCartService", "src\ShoppingCartService\ShoppingCartService.csproj", "{C5FB9F6A-305B-471B-A8FE-9EB9ECDD78A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingCartService", "src\ShoppingCartService\ShoppingCartService.csproj", "{C5FB9F6A-305B-471B-A8FE-9EB9ECDD78A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService", "src\OrderService\OrderService.csproj", "{0BC4288C-A663-490E-9577-1A702427AE9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderService", "src\OrderService\OrderService.csproj", "{0BC4288C-A663-490E-9577-1A702427AE9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscountService", "src\DiscountService\DiscountService.csproj", "{D0FE5395-E24D-446B-8307-7C199462844E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscountService", "src\DiscountService\DiscountService.csproj", "{D0FE5395-E24D-446B-8307-7C199462844E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,5 +78,8 @@ Global
 		{C5FB9F6A-305B-471B-A8FE-9EB9ECDD78A0} = {EB39C275-6399-403F-B3DE-85E12277CC77}
 		{0BC4288C-A663-490E-9577-1A702427AE9B} = {EB39C275-6399-403F-B3DE-85E12277CC77}
 		{D0FE5395-E24D-446B-8307-7C199462844E} = {EB39C275-6399-403F-B3DE-85E12277CC77}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5B1B734B-46DD-46C2-88ED-6825ACED173A}
 	EndGlobalSection
 EndGlobal
