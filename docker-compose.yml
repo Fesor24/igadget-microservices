@@ -2,6 +2,7 @@ services:
   postgres:
     image: postgres
     restart: always
+    container_name: postgres
     environment:
         POSTGRES_PASSWORD: productpw
     ports:
@@ -11,6 +12,7 @@ services:
   mongo:
     image: mongo
     restart: always
+    container_name: mongo
     environment:
         MONGO_INITDB_ROOT_USERNAME: root
         MONGO_INITDB_ROOT_PASSWORD: mongopw
@@ -22,17 +24,20 @@ services:
   adminer:
     image: adminer
     restart: always
+    container_name: adminer
     ports:
         - 8080:8080
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
     ports:
         - 5672:5672
         - 15672:15672
   redis:
     image: redis:latest
     command: ["redis-server", "--appendonly", "yes"]
+    container_name: redis
     ports:
         - 6379:6379 
     volumes: 
@@ -40,6 +45,7 @@ services:
   redis-commander:
     image: rediscommander/redis-commander:latest
     restart: always
+    container_name: redis-commander
     environment:
         - REDIS_HOSTS=local:redis:6379
         - HTTP_USER=root
@@ -51,6 +57,7 @@ services:
 
   product-svc:
     image: fesor24/product-svc:latest
+    container_name: product-svc
     build:
         context: .
         dockerfile: src/ProductService/Dockerfile
@@ -73,6 +80,7 @@ services:
 
   search-svc:
     image: fesor24/search-svc:latest
+    container_name: search-svc
     build:
         context: .
         dockerfile: src/SearchService/Dockerfile
@@ -95,6 +103,7 @@ services:
   
   identity-svc:
     image: fesor24/identity-svc:latest
+    container_name: identity-svc
     build: 
         context: .
         dockerfile: src/IdentityService/Dockerfile
@@ -109,6 +118,7 @@ services:
 
   gateway-svc:
     image: fesor24/gateway-svc:latest
+    container_name: gateway-svc
     build:
         context: .
         dockerfile: src/GatewayService/Dockerfile
@@ -119,6 +129,7 @@ services:
         - 6001:80 
   shoppingcart-svc: 
       image: fesor24-cartsvc:latest
+      container_name: cart-svc
       build:
         context: .
         dockerfile: src/ShoppingCartService/Dockerfile
@@ -138,6 +149,7 @@ services:
         - redis   
   order-svc:
        image: fesor24-ordersvc:latest
+       container_name: order-svc
        build:
          context: .
          dockerfile: src/OrderService/Dockerfile
@@ -154,6 +166,18 @@ services:
        depends_on:
           - rabbitmq
           - postgres
+
+  discount-svc:
+        image: fesor24/discount-svc:latest
+        container_name: discount-svc
+        build:
+            context: .
+            dockerfile: src/DiscountService/Dockerfile
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - ASPNETCORE_URLS=http://+:80
+        ports:
+            - 7005:80    
           
 volumes:
     pgdata:
