@@ -108,8 +108,8 @@ public class OrderService : IOrderService
 
         return new CreateOrderResponse
         {
-            PaymentStatus = Enums.PaymentStatus.Pending,
-            OrderStatus = Enums.OrderStatus.Pending,
+            PaymentStatus = Enums.PaymentStatus.Pending.ToString(),
+            OrderStatus = Enums.OrderStatus.Pending.ToString(),
             DeliveryAddress = new AddressResponse
             {
                 City = order.DeliveryAddress.City,
