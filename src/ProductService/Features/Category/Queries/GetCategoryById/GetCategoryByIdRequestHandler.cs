@@ -7,7 +7,7 @@ using Shared.Exceptions;
 
 namespace ProductService.Features.Category.Queries.GetCategoryById;
 
-public class GetCategoryByIdRequestHandler : IRequestHandler<GetCategoryByIdRequest, GetCategoryResponse>
+internal sealed class GetCategoryByIdRequestHandler : IRequestHandler<GetCategoryByIdRequest, GetCategoryResponse>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
