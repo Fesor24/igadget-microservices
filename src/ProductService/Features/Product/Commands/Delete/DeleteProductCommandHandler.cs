@@ -6,7 +6,7 @@ using Shared.Exceptions;
 
 namespace ProductService.Features.Product.Commands.Delete;
 
-public sealed class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, bool>
+internal sealed class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, bool>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPublishEndpoint _publishEndpoint;
