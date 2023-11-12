@@ -9,7 +9,7 @@ using ProductEntity = ProductService.Entities.Product;
 
 namespace ProductService.Features.Product.Commands.Create;
 
-public sealed class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, GetProductResponse>
+internal sealed class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, GetProductResponse>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPublishEndpoint _publishEndpoint;
