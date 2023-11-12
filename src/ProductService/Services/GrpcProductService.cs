@@ -22,8 +22,8 @@ public class GrpcProductService : GrpcProduct.GrpcProductBase
         {
             Price = (float)product.Price,
             Name = product.Name,
-            Brand = product.Brand.Name,
-            Category = product.Category.Name,
+            Brand = product.Brand,
+            Category = product.Category,
             ImageUrl = product.ImageUrl,
             Id = product.Id.ToString()
         };
