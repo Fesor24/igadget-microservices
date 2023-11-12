@@ -6,7 +6,7 @@ using Shared.Exceptions;
 
 namespace ProductService.Features.Brand.Queries.GetBrandById;
 
-public class GetBrandByIdRequestHandler : IRequestHandler<GetBrandByIdRequest, GetBrandResponse>
+internal sealed class GetBrandByIdRequestHandler : IRequestHandler<GetBrandByIdRequest, GetBrandResponse>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
