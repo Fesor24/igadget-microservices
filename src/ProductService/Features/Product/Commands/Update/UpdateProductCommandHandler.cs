@@ -4,7 +4,7 @@ using Shared.Exceptions;
 
 namespace ProductService.Features.Product.Commands.Update;
 
-public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, Unit>
+internal sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, Unit>
 {
     private readonly IUnitOfWork _unitOfWork;
 
