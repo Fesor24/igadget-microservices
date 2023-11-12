@@ -4,7 +4,7 @@ using CategoryEntity =  ProductService.Entities.Category;
 
 namespace ProductService.Features.Category.Command.Create;
 
-public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, Guid>
+internal sealed class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, Guid>
 {
     private readonly IUnitOfWork _unitOfWork;
 
