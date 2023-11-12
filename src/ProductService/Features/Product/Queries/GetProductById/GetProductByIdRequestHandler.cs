@@ -6,7 +6,7 @@ using Shared.Exceptions;
 
 namespace ProductService.Features.Product.Queries.GetProductById;
 
-public class GetProductByIdRequestHandler : IRequestHandler<GetProductByIdRequest, GetProductResponse>
+internal sealed class GetProductByIdRequestHandler : IRequestHandler<GetProductByIdRequest, GetProductResponse>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
