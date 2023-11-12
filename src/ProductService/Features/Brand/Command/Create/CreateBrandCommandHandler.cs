@@ -4,7 +4,7 @@ using BrandEntity = ProductService.Entities.Brand;
 
 namespace ProductService.Features.Brand.Command.Create;
 
-public class CreateBrandCommandHandler : IRequestHandler<CreateBrandCommand, Guid>
+internal sealed class CreateBrandCommandHandler : IRequestHandler<CreateBrandCommand, Guid>
 {
     private readonly IUnitOfWork _unitOfWork;
 
