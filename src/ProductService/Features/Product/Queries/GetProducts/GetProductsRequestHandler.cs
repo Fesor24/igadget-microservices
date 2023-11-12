@@ -5,7 +5,7 @@ using ProductService.Response;
 
 namespace ProductService.Features.Product.Queries.GetProducts;
 
-public class GetProductsRequestHandler : IRequestHandler<GetProductsRequest, IReadOnlyList<GetProductResponse>>
+internal sealed class GetProductsRequestHandler : IRequestHandler<GetProductsRequest, IReadOnlyList<GetProductResponse>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
