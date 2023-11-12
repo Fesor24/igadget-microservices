@@ -5,7 +5,8 @@ using ProductService.Response;
 
 namespace ProductService.Features.Category.Queries.GetCategories;
 
-public class GetCategoriesRequestHandler : IRequestHandler<GetCategoriesRequest, IReadOnlyList<GetCategoryResponse>>
+internal sealed class GetCategoriesRequestHandler : IRequestHandler<GetCategoriesRequest, 
+    IReadOnlyList<GetCategoryResponse>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
