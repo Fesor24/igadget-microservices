@@ -1,9 +1,10 @@
 ﻿using ProductService.Entities;
+using ProductService.Models;
 
 namespace ProductService.DataAccess.Contracts;
 
 public interface IProductRepository : IGenericRepository<Product>
 {
-    Task<Product> GetProductDetails(Guid id);
-    Task<IReadOnlyList<Product>> GetProductsDetails();
+    Task<ProductModel> GetProductDetails(Guid id);
+    Task<IReadOnlyList<ProductModel>> GetProductsDetails();
 }
