@@ -5,7 +5,7 @@ using ProductService.Response;
 
 namespace ProductService.Features.Brand.Queries.GetBrands;
 
-public class GetBrandsRequestHandler : IRequestHandler<GetBrandsRequest, IReadOnlyList<GetBrandResponse>>
+internal sealed class GetBrandsRequestHandler : IRequestHandler<GetBrandsRequest, IReadOnlyList<GetBrandResponse>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
