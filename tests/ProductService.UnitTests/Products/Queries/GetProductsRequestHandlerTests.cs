@@ -67,6 +67,8 @@ public class GetProductsRequestHandlerTests
 
         var result = await handler.Handle(request, default);
 
+        using var _ = new AssertionScope();
+
         result.Should().BeOfType<GetProductResponse>()
             .Should().NotBeNull();
     }
