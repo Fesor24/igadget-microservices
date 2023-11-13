@@ -32,7 +32,7 @@ public class ProductEndpointDefinition : ProductService.Definitions.Contracts.IE
 
     }
 
-    private async Task<IResult> GetProductsAsync(IMediator mediator)
+    internal async Task<IResult> GetProductsAsync(IMediator mediator)
     {
         var request = new GetProductsRequest();
 
@@ -41,7 +41,7 @@ public class ProductEndpointDefinition : ProductService.Definitions.Contracts.IE
         return Results.Ok(result);
     }
 
-    private async Task<IResult> GetProductByIdAsync(IMediator mediator,  Guid id)
+    internal async Task<IResult> GetProductByIdAsync(IMediator mediator,  Guid id)
     {
         var request = new GetProductByIdRequest { Id = id };
 
@@ -50,7 +50,7 @@ public class ProductEndpointDefinition : ProductService.Definitions.Contracts.IE
         return Results.Ok(result);
     }
 
-    private async Task<IResult> CreateProductAsync(IMediator mediator, CreateProductRequest productRequest)
+    internal async Task<IResult> CreateProductAsync(IMediator mediator, CreateProductRequest productRequest)
     {
         var request = new CreateProductCommand
         {
@@ -69,7 +69,7 @@ public class ProductEndpointDefinition : ProductService.Definitions.Contracts.IE
 
     }
 
-    private async Task<IResult> UpdateProductAsync(IMediator mediator, Guid id, UpdateProductRequest product)
+    internal async Task<IResult> UpdateProductAsync(IMediator mediator, Guid id, UpdateProductRequest product)
     {
         var request = new UpdateProductCommand
         {
@@ -84,7 +84,7 @@ public class ProductEndpointDefinition : ProductService.Definitions.Contracts.IE
         return Results.NoContent();
     }
 
-    private async Task<IResult> DeleteProductAsync(IMediator mediator, Guid id)
+    internal async Task<IResult> DeleteProductAsync(IMediator mediator, Guid id)
     {
         await mediator.Send(new DeleteProductCommand(id));
 
