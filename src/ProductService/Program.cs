@@ -22,3 +22,5 @@ app.RegisterEndpoints();
 app.MapGrpcService<GrpcProductService>();
 
 app.Run();
+
+public partial class Program { }
