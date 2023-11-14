@@ -5,6 +5,7 @@ using ProductService.Features.Product.Commands.Update;
 using ProductService.Features.Product.Queries.GetProductById;
 using ProductService.Features.Product.Queries.GetProducts;
 using ProductService.Request;
+using Shared.Exceptions;
 
 namespace ProductService.Definitions;
 
@@ -41,9 +42,15 @@ public class ProductEndpointDefinition : ProductService.Definitions.Contracts.IE
         return Results.Ok(result);
     }
 
-    internal async Task<IResult> GetProductByIdAsync(IMediator mediator,  Guid id)
+    internal async Task<IResult> GetProductByIdAsync(IMediator mediator, string id)
     {
-        var request = new GetProductByIdRequest { Id = id };
+        Guid productId = Guid.NewGuid();
+
+        var validGuid = Guid.TryParse(id, out productId);
+
+        if (!validGuid) throw new ApiBadRequestException($"Invalid param: {id}");
+
+        var request = new GetProductByIdRequest { Id = productId };
 
         var result = await mediator.Send(request);
 
