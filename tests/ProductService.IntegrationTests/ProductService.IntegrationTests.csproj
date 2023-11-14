@@ -29,8 +29,4 @@
     <ProjectReference Include="..\..\src\ProductService\ProductService.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Products\" />
-  </ItemGroup>
-
 </Project>
