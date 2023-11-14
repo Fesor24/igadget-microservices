@@ -1,15 +1,42 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using ProductService.Data;
+using ProductService.IntegrationTests.Utils;
+using Testcontainers.PostgreSql;
 
 namespace ProductService.IntegrationTests.Fixtures;
 public class ProductSvcApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    public Task InitializeAsync()
+    private readonly PostgreSqlContainer _postgreSqlContainer = new PostgreSqlBuilder().Build();
+
+    public async Task InitializeAsync()
     {
-        throw new NotImplementedException();
+        await _postgreSqlContainer.StartAsync();
     }
 
-    Task IAsyncLifetime.DisposeAsync()
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        throw new NotImplementedException();
+        builder.ConfigureTestServices(services =>
+        {
+            services.RemoveDbContext<ProductDbContext>();
+
+            services.AddDbContext<ProductDbContext>(options =>
+            {
+                options.UseNpgsql(_postgreSqlContainer.GetConnectionString());
+            });
+
+            services.AddMassTransitTestHarness();
+
+            services.EnsureCreated<ProductDbContext>();
+
+        });
+
+        base.ConfigureWebHost(builder);
     }
+
+    Task IAsyncLifetime.DisposeAsync() => _postgreSqlContainer.DisposeAsync().AsTask();
 }
