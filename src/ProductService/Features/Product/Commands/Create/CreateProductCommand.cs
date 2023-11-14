@@ -24,7 +24,7 @@ public sealed class CraeteProductCommandValidator: AbstractValidator<CreateProdu
             .NotNull().WithMessage("Name can not be null");
 
         RuleFor(x => x.Description)
-            .NotEmpty().WithMessage("Desctiption can not be empty")
+            .NotEmpty().WithMessage("Description can not be empty")
             .NotNull().WithMessage("Description can not be null");
 
         RuleFor(x => x.ImageUrl)
