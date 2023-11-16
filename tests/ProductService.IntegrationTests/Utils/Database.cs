@@ -50,14 +50,14 @@ public static class Database
         };
 
     private static List<Category> GetCategories() =>
-        new List<Category>
+        new()
         {
             new Category{Id = Guid.Parse("e8b83e8d-deff-4228-9c03-1828d233eb2e"), Name = "Android" },
             new Category{Id = Guid.Parse("56b12de0-76ad-4e1f-834f-e9b418578a98"), Name = "IPhone" }
         };
 
     private static List<Brand> GetBrands() =>
-        new List<Brand>
+        new()
         {
             new Brand{Id = Guid.Parse("a9effcdf-90cd-488d-84e0-4f72d0a0cc16"), Name = "Apple" },
             new Brand{Id = Guid.Parse("18545394-3e6f-40e5-8397-6dd4f09ea545"), Name = "Samsung" }
