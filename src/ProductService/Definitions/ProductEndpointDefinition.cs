@@ -44,7 +44,7 @@ public class ProductEndpointDefinition : ProductService.Definitions.Contracts.IE
 
     internal async Task<IResult> GetProductByIdAsync(IMediator mediator, string id)
     {
-        Guid productId = Guid.NewGuid();
+        Guid productId;
 
         var validGuid = Guid.TryParse(id, out productId);
 
@@ -76,14 +76,21 @@ public class ProductEndpointDefinition : ProductService.Definitions.Contracts.IE
 
     }
 
-    internal async Task<IResult> UpdateProductAsync(IMediator mediator, Guid id, UpdateProductRequest product)
+    internal async Task<IResult> UpdateProductAsync(IMediator mediator, string id, UpdateProductRequest product)
     {
+        Guid productId;
+
+        var validGuid = Guid.TryParse(id, out productId);
+
+        if (!validGuid) throw new ApiBadRequestException($"Invalid product id: {id}");
+
         var request = new UpdateProductCommand
         {
-            Id = id,
+            Id = productId,
             Name = product.Name,
             Description = product.Description,
-            ImageUrl = product.ImageUrl
+            ImageUrl = product.ImageUrl,
+            Price = product.Price
         };
 
         await mediator.Send(request);
