@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ProductService.Data;
 using ProductService.IntegrationTests.Fixtures;
 using ProductService.IntegrationTests.Utils;
+using ProductService.Request;
 using ProductService.Response;
 using System.Net.Http.Json;
 
@@ -15,6 +16,10 @@ public class ProductEndpointTest : IClassFixture<ProductSvcApplicationFactory>, 
     private readonly HttpClient _httpClient;
 
     private const string _validProductId = "3e381e10-4be5-4406-ba23-3bd323b70710";
+
+    private const string _brandId = "a9effcdf-90cd-488d-84e0-4f72d0a0cc16";
+
+    private const string _categoryId = "e8b83e8d-deff-4228-9c03-1828d233eb2e";
 
     public ProductEndpointTest(ProductSvcApplicationFactory appFactory)
     {
@@ -68,6 +73,70 @@ public class ProductEndpointTest : IClassFixture<ProductSvcApplicationFactory>, 
         product.Should().BeOfType<GetProductResponse>();
     }
 
+    [Fact]
+    public async Task CreateProduct_WithBadData_ShouldReturn422UnprocessableEntity()
+    {
+        var createProductRequest = ProductCreate();
+
+        createProductRequest.Name = string.Empty;
+
+        var response = await _httpClient.PostAsync($"api/products", JsonContent.Create(createProductRequest));
+
+        response.Should().HaveStatusCode(System.Net.HttpStatusCode.UnprocessableEntity);
+    }
+
+    [Fact]
+    public async Task CreateProduct_WithValidData_ShouldReturn201Created()
+    {
+        var response = await _httpClient.PostAsync($"api/products", JsonContent.Create(ProductCreate()));
+
+        response.EnsureSuccessStatusCode();
+
+        response.Should().HaveStatusCode(System.Net.HttpStatusCode.Created);
+
+        var createdProduct = await response.Content.ReadFromJsonAsync<GetProductResponse>();
+
+        createdProduct.Should().NotBeNull();
+
+        createdProduct.Should().BeOfType<GetProductResponse>();
+    }
+
+    [Fact]
+    public async Task UpdateProduct_WithInvalidId_ShouldReturn404()
+    {
+        UpdateProductRequest req = new()
+        {
+            Name = "Xaomi",
+            Price = 1920293m,
+            Description = "Update xaoimi",
+            ImageUrl = "updated-img-url"
+        };
+
+        var response = await _httpClient.PutAsync("api/products/B69E5408-475F-46A7-A8B4-3FF062A962D1", 
+            JsonContent.Create(req));
+
+        response.Should().HaveStatusCode(System.Net.HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task UpdateProduct_WithValidId_ShouldReturn204NoContent()
+    {
+        UpdateProductRequest req = new()
+        {
+            Name = "Xaomi",
+            Price = 1920293m,
+            Description = "Update xaoimi",
+            ImageUrl = "updated-img-url"
+        };
+
+        var response = await _httpClient.PutAsync($"api/products/{_validProductId}",
+            JsonContent.Create(req));
+
+        response.EnsureSuccessStatusCode();
+
+        response.Should().HaveStatusCode(System.Net.HttpStatusCode.NoContent);
+    }
+
     public Task InitializeAsync() => Task.CompletedTask;
 
     public Task DisposeAsync()
@@ -79,5 +148,19 @@ public class ProductEndpointTest : IClassFixture<ProductSvcApplicationFactory>, 
         Database.ReInitializeDb(db);
 
         return Task.CompletedTask;
+    }
+
+    private CreateProductRequest ProductCreate()
+    {
+        return new CreateProductRequest
+        {
+            Price = 500.00m,
+            Name = "Xaoimi",
+            Description = "Xaoimi phone",
+            ImageUrl = "random-img",
+            BrandId = Guid.Parse(_brandId),
+            CategoryId = Guid.Parse(_categoryId),
+            YearOfRelease = 2015
+        };
     }
 }
