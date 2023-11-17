@@ -12,6 +12,7 @@ COPY src/IdentityService/IdentityService.csproj src/IdentityService/IdentityServ
 COPY src/OrderService/OrderService.csproj src/OrderService/OrderService.csproj
 COPY tests/ProductService.IntegrationTests/ProductService.IntegrationTests.csproj tests/ProductService.IntegrationTests/ProductService.IntegrationTests.csproj
 COPY tests/ProductService.UnitTests/ProductService.UnitTests.csproj tests/ProductService.UnitTests/ProductService.UnitTests.csproj
+COPY tests/SearchService.IntegrationTests/SearchService.IntegrationTests.csproj tests/SearchService.IntegrationTests/SearchService.IntegrationTests.csproj
 
 RUN dotnet restore IGadget.sln
 
