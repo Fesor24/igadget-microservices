@@ -4,7 +4,6 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using Moq;
 using ProductService.DataAccess.Contracts;
-using ProductService.Entities;
 using ProductService.Features.Product.Queries.GetProductById;
 using ProductService.Features.Product.Queries.GetProducts;
 using ProductService.Helper;
@@ -38,7 +37,7 @@ public class GetProductsRequestHandlerTests
         var products = _fixture.CreateMany<ProductModel>(10).ToList();
 
         _unitOfWork.Setup(unit => unit.ProductRepository.GetProductsDetails())
-            .Returns(Task.FromResult((IReadOnlyList<ProductModel>)products));
+            .ReturnsAsync((IReadOnlyList<ProductModel>)products);
 
         var request = new GetProductsRequest();
 
@@ -59,7 +58,7 @@ public class GetProductsRequestHandlerTests
         var product = _fixture.Create<ProductModel>();
 
         _unitOfWork.Setup(unit => unit.ProductRepository.GetProductDetails(It.IsAny<Guid>()))
-            .Returns(Task.FromResult(product));
+            .ReturnsAsync(product);
 
         var request = new GetProductByIdRequest { Id = It.IsAny<Guid>()};
 
