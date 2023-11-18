@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using OrderService.Consumers;
 using OrderService.Data;
+using OrderService.DataAccess.Contracts;
+using OrderService.DataAccess.Repository;
 using OrderService.Services.Contracts;
 using OrderService.Services.Implementation;
 using OrdSvc = OrderService.Services.Implementation.OrderService;
@@ -13,6 +15,10 @@ public static class ApplicationExtensions
     public static void RegisterApplicationServices(this IServiceCollection services, IConfiguration config)
     {
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddDbContext<OrderDbContext>(options =>
         {
