@@ -1,25 +1,29 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using OrderService.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using OrderService.DataAccess.Contracts;
+using OrderService.DataAccess.Specifications.Delivery;
+using OrderService.DataAccess.Specifications.Order;
+using OrderService.DataAccess.Specifications.Products;
+using OrderService.Entities;
 using OrderService.Entities.OrderAggregate;
 using OrderService.Requests;
 using OrderService.Response;
 using OrderService.Services.Contracts;
 using Shared.Exceptions;
 using System.Security.Claims;
+using OrderEntity = OrderService.Entities.OrderAggregate.Order;
 
 namespace OrderService.Services.Implementation;
 
 public class OrderService : IOrderService
 {
-    private readonly OrderDbContext _context;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IGrpcClient _grpcClient;
     private readonly IHttpContextAccessor _contextAccessor;
 
-    public OrderService(OrderDbContext context, IGrpcClient grpcClient, 
+    public OrderService(IUnitOfWork unitOfWork, IGrpcClient grpcClient, 
         IHttpContextAccessor contextAccessor)
     {
-        _context = context;
+        _unitOfWork = unitOfWork;
         _grpcClient = grpcClient;
         _contextAccessor = contextAccessor;
     }
@@ -35,7 +39,9 @@ public class OrderService : IOrderService
 
         foreach(var item in cart.Items)
         {
-            var productItem = await _context.Product.FirstOrDefaultAsync(x => x.Id == Guid.Parse(item.ProductId)) ?? 
+            var productSpec = new GetProductSpecification(Guid.Parse(item.ProductId));
+
+            var productItem = await _unitOfWork.Repository<Product>().GetAsync(productSpec) ??
                 _grpcClient.GetProduct(item.ProductId);
 
             if (productItem is null)
@@ -72,8 +78,9 @@ public class OrderService : IOrderService
             orderItemsResponse.Add(orderItemResponse);
         }
 
-        var deliveryMethod = await _context.DeliveryMethod
-            .FirstOrDefaultAsync(x => x.Id == Guid.Parse(orderRequest.DeliveryMethodId)) ??
+        var deliverySpec = new GetDeliverySpecification(Guid.Parse(orderRequest.DeliveryMethodId));
+
+        var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>().GetAsync(deliverySpec) ??
             throw new ApiNotFoundException($"Delivery method with id: {orderRequest.DeliveryMethodId} not found");
 
         var deliveryAddress = new Address
@@ -84,7 +91,7 @@ public class OrderService : IOrderService
             Street = orderRequest.DeliveryAddress.Street,
         };
 
-        var order = new Order
+        OrderEntity order = new()
         {
             OrderItems = orderItems,
             DeliveryMethod = deliveryMethod,
@@ -97,9 +104,9 @@ public class OrderService : IOrderService
             SubTotal = orderItems.Sum(x => x.Quantity * x.Price)
         };
 
-        await _context.Order.AddAsync(order);
+        await _unitOfWork.Repository<OrderEntity>().AddAsync(order);
 
-        var result = await _context.SaveChangesAsync();
+        var result = await _unitOfWork.Complete();
 
         if (result > 0)
             _grpcClient.DeleteCart(orderRequest.CartId);
@@ -127,11 +134,10 @@ public class OrderService : IOrderService
 
     public async Task<GetOrderResponse> GetOrderByIdAsync(Guid id)
     {
-        var order = await _context.Order
-                    .Include(x => x.DeliveryMethod)
-                    .Include(x => x.OrderItems)
-                    .FirstOrDefaultAsync(x => x.Id == id) ??
-                    throw new ApiNotFoundException($"Order with id: {id} not found");
+        var spec = new GetOrderSpecification(id);
+
+        var order = await _unitOfWork.Repository<OrderEntity>().GetAsync(spec) ??
+            throw new ApiNotFoundException($"Order with id: {id} not found");
 
         List<OrderItemsResponse> itemsResponse = new();
 
@@ -165,11 +171,9 @@ public class OrderService : IOrderService
     {
         var email = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
 
-        var orders = await _context.Order
-            .Include(x => x.DeliveryMethod)
-            .Include(x => x.OrderItems)
-            .Where(x => x.BuyerEmail == email)
-            .ToListAsync();
+        var spec = new GetOrderSpecification(email);
+
+        var orders = await _unitOfWork.Repository<OrderEntity>().GetAllAsync(spec);
 
         List<GetOrderResponse> ordersResponse = new();
 
