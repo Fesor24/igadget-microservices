@@ -13,6 +13,7 @@ COPY src/OrderService/OrderService.csproj src/OrderService/OrderService.csproj
 COPY tests/ProductService.IntegrationTests/ProductService.IntegrationTests.csproj tests/ProductService.IntegrationTests/ProductService.IntegrationTests.csproj
 COPY tests/ProductService.UnitTests/ProductService.UnitTests.csproj tests/ProductService.UnitTests/ProductService.UnitTests.csproj
 COPY tests/SearchService.IntegrationTests/SearchService.IntegrationTests.csproj tests/SearchService.IntegrationTests/SearchService.IntegrationTests.csproj
+COPY tests/OrderService.UnitTests/OrderService.UnitTests.csproj tests/OrderService.UnitTests/OrderService.UnitTests.csproj
 
 WORKDIR /app
 RUN dotnet restore IGadget.sln
