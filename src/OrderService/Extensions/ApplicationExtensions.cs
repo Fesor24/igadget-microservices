@@ -59,5 +59,13 @@ public static class ApplicationExtensions
         services.AddScoped<IGrpcClient, GrpcClient>();
 
         services.AddHttpContextAccessor();
+
+        services.AddCors(policy =>
+        {
+            policy.AddPolicy("CorsPolicy", pol =>
+            {
+                pol.AllowAnyMethod().AllowAnyHeader().AllowAnyMethod();
+            });
+        });
     }
 }
