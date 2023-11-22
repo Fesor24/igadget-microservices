@@ -22,7 +22,9 @@ public static class SearchEndpoint
 
         if (!string.IsNullOrWhiteSpace(searchParams.SearchTerm))
         {
-            query.Match(Search.Full, searchParams.SearchTerm).SortByTextScore();
+            string search = searchParams.SearchTerm.Replace("_", " ");
+
+            query.Match(Search.Full, search).SortByTextScore();
         }
 
         if(searchParams.YearOfReleaseStart != default)
@@ -54,6 +56,8 @@ public static class SearchEndpoint
                 ("Category", "asc") => query.Sort(x => x.Category, Order.Ascending),
                 ("Brand", "desc") => query.Sort(x => x.Brand, Order.Descending),
                 ("Brand", "asc") => query.Sort(x => x.Brand, Order.Ascending),
+                ("Price", "asc") => query.Sort(x => x.Price, Order.Ascending),
+                ("Price", "desc") => query.Sort(x => x.Price, Order.Descending),
                 _ => query.Sort(x => x.Name, Order.Ascending)
             };
         }
