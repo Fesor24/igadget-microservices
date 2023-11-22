@@ -46,12 +46,22 @@ builder.Services.AddMassTransit(opt =>
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+builder.Services.AddCors(policy =>
+{
+    policy.AddPolicy("CorsPolicy", pol =>
+    {
+        pol.AllowAnyMethod().AllowAnyHeader().AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 app.Lifetime.ApplicationStarted.Register(async () =>
 {
     await DbInitializer.InitDb(app);
 });
+
+app.UseCors("CorsPolicy");
 
 SearchEndpoint.Register(app);
 
