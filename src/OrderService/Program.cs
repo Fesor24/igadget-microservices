@@ -8,6 +8,8 @@ builder.Services.RegisterAuthServices(builder.Configuration);
 
 var app = builder.Build();
 
+app.UseCors("CorsPolicy");
+
 app.UseAuthentication();
 
 app.UseAuthorization();
