@@ -63,6 +63,14 @@ public static class ApplicationExtension
         });
 
         services.AddGrpc();
-        
+
+        services.AddCors(policy =>
+        {
+            policy.AddPolicy("CorsPolicy", pol =>
+            {
+                pol.AllowAnyMethod().AllowAnyHeader().AllowAnyMethod();
+            });
+        });
+
     }
 }
