@@ -13,7 +13,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.Audience = "orderapi";
     });
 
+builder.Services.AddCors(policy =>
+{
+    policy.AddPolicy("CorsPolicy", pol =>
+    {
+        pol.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+    });
+});
+
 var app = builder.Build();
+
+app.UseCors("CorsPolicy");
 
 app.MapReverseProxy();
 
