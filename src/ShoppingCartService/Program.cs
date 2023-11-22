@@ -18,7 +18,17 @@ builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
 
 builder.Services.AddGrpc();
 
+builder.Services.AddCors(policy =>
+{
+    policy.AddPolicy("CorsPolicy", pol =>
+    {
+        pol.AllowAnyMethod().AllowAnyHeader().AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
+
+app.UseCors("CorsPolicy");
 
 ShoppingCartEndpointDefinition.RegisterEndpoint(app);
 
