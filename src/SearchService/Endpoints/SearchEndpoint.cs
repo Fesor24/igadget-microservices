@@ -47,20 +47,17 @@ public static class SearchEndpoint
         {
             searchParams.SortDirection = "asc";
         }
-        
-        if(!string.IsNullOrWhiteSpace(searchParams.SortBy) && !string.IsNullOrWhiteSpace(searchParams.SortDirection))
+
+        query = (searchParams.SortBy, searchParams.SortDirection) switch
         {
-            query = (searchParams.SortBy, searchParams.SortDirection) switch
-            {
-                ("Category", "desc") => query.Sort(x => x.Category, Order.Descending),
-                ("Category", "asc") => query.Sort(x => x.Category, Order.Ascending),
-                ("Brand", "desc") => query.Sort(x => x.Brand, Order.Descending),
-                ("Brand", "asc") => query.Sort(x => x.Brand, Order.Ascending),
-                ("Price", "asc") => query.Sort(x => x.Price, Order.Ascending),
-                ("Price", "desc") => query.Sort(x => x.Price, Order.Descending),
-                _ => query.Sort(x => x.Name, Order.Ascending)
-            };
-        }
+            ("Category", "desc") => query.Sort(x => x.Category, Order.Descending),
+            ("Category", "asc") => query.Sort(x => x.Category, Order.Ascending),
+            ("Brand", "desc") => query.Sort(x => x.Brand, Order.Descending),
+            ("Brand", "asc") => query.Sort(x => x.Brand, Order.Ascending),
+            ("Price", "asc") => query.Sort(x => x.Price, Order.Ascending),
+            ("Price", "desc") => query.Sort(x => x.Price, Order.Descending),
+            _ => query.Sort(x => x.Name, Order.Ascending)
+        };
 
         var result = await query
             .Project(x => new GetProductResponse(
