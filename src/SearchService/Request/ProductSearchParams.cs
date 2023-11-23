@@ -9,6 +9,6 @@ public record ProductSearchParams
     public int YearOfReleaseEnd { get; set; }
     public decimal MinimumPrice { get; set; }
     public decimal MaximumPrice { get; set; }
-    public string SortBy { get; set; }
-    public string SortDirection { get; set; }
+    public string SortBy { get; set; } = string.Empty;
+    public string SortDirection { get; set; } = string.Empty;
 }
