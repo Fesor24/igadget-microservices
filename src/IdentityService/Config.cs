@@ -1,5 +1,4 @@
 ﻿using Duende.IdentityServer.Models;
-using IdentityModel;
 
 namespace IdentityService;
 
@@ -22,6 +21,10 @@ public static class Config
             new ApiResource("orderapi", "Order Api")
             {
                 Scopes = new[]{"orderapi.full"}
+            },
+            new ApiResource("web_client", "Web Client")
+            {
+                Scopes = new[]{"orderapi.full"}
             }
         };
 
@@ -33,7 +36,7 @@ public static class Config
             new ApiScope("orderapi.full", "Order Api Full Access")
         };
 
-    public static IEnumerable<Client> Clients =>
+    public static IEnumerable<Client> Clients(IConfiguration config) =>
         new Client[]
         {
             // m2m client credentials flow client
@@ -46,19 +49,6 @@ public static class Config
                 AllowedScopes = { "productapi.read", "productapi.write" },
             },
 
-            // for angular application
-            new Client
-            {
-                ClientId = "order_service",
-                ClientName = "Order Service",
-                ClientSecrets = { new Secret("order-secret".Sha256()) },
-                AllowedGrantTypes = GrantTypes.Code,
-                RedirectUris = { "http://localhost:4200/signin-oidc" },
-                PostLogoutRedirectUris = { "https://localhost:4200/signout-callback-oidc" },
-                AllowOfflineAccess = true,
-                AllowedScopes = { "openid", "profile", "orderapi.full" }
-            },
-
             // To test order-svc on postman
             new Client
             {
@@ -69,6 +59,22 @@ public static class Config
                 AllowedScopes = {"openid", "profile", "orderapi.full"},
                 AlwaysIncludeUserClaimsInIdToken = true,
                 AccessTokenLifetime = 3600 * 24
+            },
+            new Client
+            {
+                ClientId = "web_client",
+                ClientName = "Web Client",
+                ClientSecrets = { new Secret("web-secret".Sha256())},
+                AllowedScopes = {"openid", "profile", "orderapi.full"},
+                AllowedGrantTypes = GrantTypes.Code,
+                RedirectUris = {$"{config["WebHost"]}/signin-oidc" },
+                PostLogoutRedirectUris = {config["WebHost"]},
+                FrontChannelLogoutUri = $"{config["WebHost"]}/signout-oidc",
+                AllowOfflineAccess = true,
+                RequirePkce = true,
+                AlwaysIncludeUserClaimsInIdToken = true,
+                AccessTokenLifetime = 3600 * 24,
+                IdentityTokenLifetime = 3600 * 24
             }
         };
 }
