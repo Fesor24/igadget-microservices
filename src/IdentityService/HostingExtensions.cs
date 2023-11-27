@@ -16,6 +16,14 @@ internal static class HostingExtensions
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+        builder.Services.AddCors(policy =>
+        {
+            policy.AddPolicy("CorsPolicy", opt =>
+            {
+                opt.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+            });
+        });
+
         builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
@@ -39,9 +47,10 @@ internal static class HostingExtensions
             .AddInMemoryIdentityResources(Config.IdentityResources)
             .AddInMemoryApiResources(Config.ApiResources)
             .AddInMemoryApiScopes(Config.ApiScopes)
-            .AddInMemoryClients(Config.Clients)
+            .AddInMemoryClients(Config.Clients(builder.Configuration))
             .AddAspNetIdentity<ApplicationUser>()
-            .AddProfileService<CustomProfileService>();
+            .AddProfileService<CustomProfileService>()
+            .AddCorsPolicyService<CorsPolicyService>();
 
         //builder.Services.AddAuthentication();
 
@@ -62,6 +71,8 @@ internal static class HostingExtensions
         {
             app.UseDeveloperExceptionPage();
         }
+
+        app.UseCors("CorsPolicy");
 
         app.UseStaticFiles();
         app.UseRouting();
