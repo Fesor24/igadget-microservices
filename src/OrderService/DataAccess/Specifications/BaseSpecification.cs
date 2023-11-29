@@ -18,6 +18,11 @@ public class BaseSpecification<T> : ISpecification<T>
 
     public List<Expression<Func<T, object>>> Includes { get; private set; } = new();
 
+    public Expression<Func<T, object>> OrderByDescending { get; private set; }
+
     protected void AddIncludes(Expression<Func<T, object>> include) => 
         Includes.Add(include);
+
+    protected void AddOrderByDescending(Expression<Func<T, object>> orderByDesc) =>
+        OrderByDescending = orderByDesc;
 }
