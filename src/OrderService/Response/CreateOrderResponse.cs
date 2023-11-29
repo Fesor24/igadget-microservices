@@ -9,5 +9,5 @@ public class CreateOrderResponse
     public decimal Total { get; set; }
     public string OrderStatus { get; set; }
     public string PaymentStatus { get; set; }
-    public DateTimeOffset OrderDate { get; set; }
+    public string Date { get; set; }
 }
