@@ -14,5 +14,6 @@ public class GetOrderSpecification : BaseSpecification<OrderEntity>
     {
         AddIncludes(x => x.DeliveryMethod);
         AddIncludes(x => x.OrderItems);
+        AddOrderByDescending(x => x.OrderDate);
     }
 }
