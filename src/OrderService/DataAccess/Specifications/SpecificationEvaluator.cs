@@ -12,6 +12,11 @@ public static class SpecificationEvaluator
             query = query.Where(spec.Criteria);
         }
 
+        if(spec.OrderByDescending is not null)
+        {
+            query = query.OrderByDescending(spec.OrderByDescending);
+        }
+
         query = spec.Includes.Aggregate(query, (query, include) => query.Include(include));
 
         return query;
