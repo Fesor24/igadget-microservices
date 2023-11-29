@@ -163,7 +163,8 @@ public class OrderService : IOrderService
             Total = order.GetTotal(),
             OrderStatus = order.OrderStatus.ToString(),
             PaymentStatus = order.PaymentStatus.ToString(),
-            OrderId = order.Id.ToString()
+            OrderId = order.Id.ToString(),
+            Date = order.OrderDate.ToString("dd ddd MMM yyyy hh mm")
         };
     }
        
@@ -186,7 +187,8 @@ public class OrderService : IOrderService
                 Total = order.GetTotal(),
                 DeliveryCharges = order.DeliveryMethod.Price,
                 OrderStatus = order.OrderStatus.ToString(),
-                PaymentStatus = order.PaymentStatus.ToString()
+                PaymentStatus = order.PaymentStatus.ToString(),
+                Date = order.OrderDate.ToString("dd ddd MMM yyyy hh mm")
             };
 
             ordersResponse.Add(orderResponse);
