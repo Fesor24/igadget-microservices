@@ -1,6 +1,4 @@
-﻿using OrderService.Enums;
-
-namespace OrderService.Response;
+﻿namespace OrderService.Response;
 
 public class GetOrderResponse
 {
@@ -11,4 +9,5 @@ public class GetOrderResponse
     public decimal SubTotal { get; set; }
     public decimal Total { get; set; }  
     public decimal DeliveryCharges { get; set; }
+    public string Date { get; set; }
 }
