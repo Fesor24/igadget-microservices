@@ -1,2 +1,2 @@
-## E-commerce (microservice architecture)
-This project is an ecommerce application that leverages on a microservice architecture.
+
+![Architecture](https://github.com/Fesor24/igadget-api-microservice/blob/main/architecture.png)
