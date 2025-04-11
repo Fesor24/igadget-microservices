@@ -1,8 +1,10 @@
+name: Igadget
+
 services:
   postgres:
     image: postgres
     restart: always
-    container_name: postgres
+    container_name: igt-postgres
     environment:
         POSTGRES_PASSWORD: productpw
     ports:
@@ -12,7 +14,7 @@ services:
   mongo:
     image: mongo
     restart: always
-    container_name: mongo
+    container_name: igt-mongo
     environment:
         MONGO_INITDB_ROOT_USERNAME: root
         MONGO_INITDB_ROOT_PASSWORD: mongopw
@@ -24,20 +26,20 @@ services:
   adminer:
     image: adminer
     restart: always
-    container_name: adminer
+    container_name: igt-adminer
     ports:
         - 8090:8080
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
-    container_name: rabbitmq
+    container_name: igt-rabbitmq
     ports:
         - 5672:5672
         - 15672:15672
   redis:
     image: redis:latest
     command: ["redis-server", "--appendonly", "yes"]
-    container_name: redis
+    container_name: igt-redis
     ports:
         - 6379:6379 
     volumes: 
@@ -45,7 +47,7 @@ services:
   redis-commander:
     image: rediscommander/redis-commander:latest
     restart: always
-    container_name: redis-commander
+    container_name: igt-redis-commander
     environment:
         - REDIS_HOSTS=local:redis:6379
         - HTTP_USER=root
@@ -57,7 +59,7 @@ services:
 
   product-svc:
     image: fesor24/product-svc:latest
-    container_name: product-svc
+    container_name: igt-product-svc
     build:
         context: .
         dockerfile: src/ProductService/Dockerfile
@@ -80,7 +82,7 @@ services:
 
   search-svc:
     image: fesor24/search-svc:latest
-    container_name: search-svc
+    container_name: igt-search-svc
     build:
         context: .
         dockerfile: src/SearchService/Dockerfile
@@ -103,7 +105,7 @@ services:
   
   identity-svc:
     image: fesor24/identity-svc:latest
-    container_name: identity-svc
+    container_name: igt-identity-svc
     build: 
         context: .
         dockerfile: src/IdentityService/Dockerfile
@@ -119,7 +121,7 @@ services:
 
   gateway-svc:
     image: fesor24/gateway-svc:latest
-    container_name: gateway-svc
+    container_name: igt-gateway-svc
     build:
         context: .
         dockerfile: src/GatewayService/Dockerfile
@@ -130,7 +132,7 @@ services:
         - 6001:80 
   shoppingcart-svc: 
       image: fesor24-cartsvc:latest
-      container_name: cart-svc
+      container_name: igt-cart-svc
       build:
         context: .
         dockerfile: src/ShoppingCartService/Dockerfile
@@ -150,7 +152,7 @@ services:
         - redis   
   order-svc:
        image: fesor24-ordersvc:latest
-       container_name: order-svc
+       container_name: igt-order-svc
        build:
          context: .
          dockerfile: src/OrderService/Dockerfile

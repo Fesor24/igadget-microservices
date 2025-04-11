@@ -27,20 +27,20 @@ public static class SearchEndpoint
             query.Match(Search.Full, search).SortByTextScore();
         }
 
-        if(searchParams.YearOfReleaseStart != default)
+        if(searchParams.YearOfReleaseStart.HasValue && searchParams.YearOfReleaseStart.Value != default)
         {
             query.Match(x => x.YearOfRelease >= searchParams.YearOfReleaseStart);
         }
 
-        if(searchParams.YearOfReleaseEnd != default)
+        if(searchParams.YearOfReleaseEnd.HasValue && searchParams.YearOfReleaseEnd.Value != default)
         {
             query.Match(x => x.YearOfRelease <= searchParams.YearOfReleaseEnd);
         }
 
-        if(searchParams.MinimumPrice != default)
+        if(searchParams.MinimumPrice.HasValue && searchParams.MinimumPrice.Value != default)
             query.Match(x => x.Price >=  searchParams.MinimumPrice);
 
-        if (searchParams.MaximumPrice != default)
+        if (searchParams.MaximumPrice.HasValue && searchParams.MaximumPrice.Value != default)
             query.Match(x => x.Price <= searchParams.MaximumPrice);
 
         if(!string.IsNullOrWhiteSpace(searchParams.SortBy) && string.IsNullOrWhiteSpace(searchParams.SortDirection))
