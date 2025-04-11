@@ -72,6 +72,15 @@ internal static class HostingExtensions
             app.UseDeveloperExceptionPage();
         }
 
+        app.Use(async (ctx, next) =>
+        {
+            using var scope = app.Services.CreateScope();
+            ApplicationDbContext context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            await context.Database.MigrateAsync();
+
+            await next(ctx);
+        });
+
         app.UseCors("CorsPolicy");
 
         app.UseStaticFiles();

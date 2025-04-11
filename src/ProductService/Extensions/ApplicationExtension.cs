@@ -73,4 +73,11 @@ public static class ApplicationExtension
         });
 
     }
+
+    public static void ApplyMigrations(this WebApplication app)
+    {
+        using var scope = app.Services.CreateScope();
+        ProductDbContext context = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
+        context.Database.Migrate();
+    }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using IdentityModel;
+using Duende.IdentityModel;
 using IdentityService.Data;
 using IdentityService.Models;
 using Microsoft.AspNetCore.Identity;
@@ -8,7 +8,7 @@ using Serilog;
 
 namespace IdentityService;
 
-public class SeedData
+public static class SeedData
 {
     public static void EnsureSeedData(WebApplication app)
     {
