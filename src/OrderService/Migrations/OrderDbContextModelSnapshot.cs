@@ -8,7 +8,7 @@ using OrderService.Data;
 
 #nullable disable
 
-namespace OrderService.Data.Migrations
+namespace OrderService.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
     partial class OrderDbContextModelSnapshot : ModelSnapshot
@@ -17,7 +17,7 @@ namespace OrderService.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.13")
+                .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -54,7 +54,7 @@ namespace OrderService.Data.Migrations
                     b.Property<Guid?>("DeliveryMethodId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTimeOffset>("OrderDate")
+                    b.Property<DateTime>("OrderDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("OrderStatus")
@@ -135,7 +135,7 @@ namespace OrderService.Data.Migrations
                         .WithMany()
                         .HasForeignKey("DeliveryMethodId");
 
-                    b.OwnsOne("OrderService.Entities.OrderAggregate.Order.DeliveryAddress#OrderService.Entities.OrderAggregate.Address", "DeliveryAddress", b1 =>
+                    b.OwnsOne("OrderService.Entities.OrderAggregate.Address", "DeliveryAddress", b1 =>
                         {
                             b1.Property<Guid>("OrderId")
                                 .HasColumnType("uuid");
@@ -173,7 +173,7 @@ namespace OrderService.Data.Migrations
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.OwnsOne("OrderService.Entities.OrderAggregate.OrderItem.ItemOrdered#OrderService.Entities.OrderAggregate.ProductItemOrdered", "ItemOrdered", b1 =>
+                    b.OwnsOne("OrderService.Entities.OrderAggregate.ProductItemOrdered", "ItemOrdered", b1 =>
                         {
                             b1.Property<Guid>("OrderItemId")
                                 .HasColumnType("uuid");
@@ -181,12 +181,12 @@ namespace OrderService.Data.Migrations
                             b1.Property<string>("ImageUrl")
                                 .HasColumnType("text");
 
-                            b1.Property<Guid>("ProductId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("ProductName")
+                            b1.Property<string>("Name")
                                 .IsRequired()
                                 .HasColumnType("text");
+
+                            b1.Property<Guid>("ProductId")
+                                .HasColumnType("uuid");
 
                             b1.HasKey("OrderItemId");
 

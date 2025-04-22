@@ -1,10 +1,9 @@
+using OrderService;
 using OrderService.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.RegisterApplicationServices(builder.Configuration);
-
-builder.Services.RegisterAuthServices(builder.Configuration);
+builder.Services.AddApplicationServices(builder.Configuration);
 
 var app = builder.Build();
 

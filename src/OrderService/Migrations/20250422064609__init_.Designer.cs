@@ -9,18 +9,18 @@ using OrderService.Data;
 
 #nullable disable
 
-namespace OrderService.Data.Migrations
+namespace OrderService.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    [Migration("20231028035801__init")]
-    partial class _init
+    [Migration("20250422064609__init_")]
+    partial class _init_
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.13")
+                .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -57,7 +57,7 @@ namespace OrderService.Data.Migrations
                     b.Property<Guid?>("DeliveryMethodId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTimeOffset>("OrderDate")
+                    b.Property<DateTime>("OrderDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("OrderStatus")
@@ -184,12 +184,12 @@ namespace OrderService.Data.Migrations
                             b1.Property<string>("ImageUrl")
                                 .HasColumnType("text");
 
-                            b1.Property<Guid>("ProductId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("ProductName")
+                            b1.Property<string>("Name")
                                 .IsRequired()
                                 .HasColumnType("text");
+
+                            b1.Property<Guid>("ProductId")
+                                .HasColumnType("uuid");
 
                             b1.HasKey("OrderItemId");
 

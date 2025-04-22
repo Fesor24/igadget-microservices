@@ -12,7 +12,7 @@ public class OrderItemEntityConfiguration : IEntityTypeConfiguration<OrderItem>
         builder.HasKey(x => x.Id);
         builder.OwnsOne(x => x.ItemOrdered, c =>
         {
-            c.Property(x => x.ProductName).IsRequired();
+            c.Property(x => x.Name).IsRequired();
             c.Property(x => x.ProductId).IsRequired();
             c.WithOwner();
         });

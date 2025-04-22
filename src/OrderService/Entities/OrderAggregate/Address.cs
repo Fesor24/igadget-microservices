@@ -1,9 +1,8 @@
 ﻿namespace OrderService.Entities.OrderAggregate;
 
-public class Address
-{
-    public string ZipCode { get; set; }
-    public string Street { get; set; }
-    public string City { get; set; }
-    public string State { get; set; }
-}
+public sealed record Address(
+    string ZipCode,
+    string Street,
+    string City,
+    string State
+    );

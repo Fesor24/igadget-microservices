@@ -14,7 +14,7 @@ using OrderEntity = OrderService.Entities.OrderAggregate.Order;
 
 namespace OrderService.Services.Implementation;
 
-public class OrderService : IOrderService
+public sealed class OrderService : IOrderService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IGrpcClient _grpcClient;
@@ -30,6 +30,9 @@ public class OrderService : IOrderService
 
     public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest orderRequest)
     {
+        string buyerEmail = _contextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Email) ?? 
+                            throw new ApiBadRequestException("User email not found");
+        
         var cart = _grpcClient.GetShoppingCart(orderRequest.CartId) ??
             throw new ApiNotFoundException($"Shopping cart with id: {orderRequest.CartId} not found");
 
@@ -47,12 +50,11 @@ public class OrderService : IOrderService
             if (productItem is null)
                 throw new ApiNotFoundException($"Product with id: {productItem.Id} not found");
 
-            var productItemOrdered = new ProductItemOrdered
-            {
-                ImageUrl = productItem.ImageUrl,
-                ProductName = productItem.Name,
-                ProductId = productItem.Id
-            };
+            var productItemOrdered = new ProductItemOrdered(
+                productItem.Id,
+                productItem.Name,
+                productItem.ImageUrl
+            );
 
             var orderItem = new OrderItem
             {
@@ -83,13 +85,12 @@ public class OrderService : IOrderService
         var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>().GetAsync(deliverySpec) ??
             throw new ApiNotFoundException($"Delivery method with id: {orderRequest.DeliveryMethodId} not found");
 
-        var deliveryAddress = new Address
-        {
-            City = orderRequest.DeliveryAddress.City,
-            State = orderRequest.DeliveryAddress.State,
-            ZipCode = orderRequest.DeliveryAddress.ZipCode,
-            Street = orderRequest.DeliveryAddress.Street,
-        };
+        var deliveryAddress = new Address(
+            orderRequest.DeliveryAddress.ZipCode,
+            orderRequest.DeliveryAddress.Street,
+            orderRequest.DeliveryAddress.City,
+            orderRequest.DeliveryAddress.State
+        );
 
         OrderEntity order = new()
         {
@@ -97,10 +98,7 @@ public class OrderService : IOrderService
             DeliveryMethod = deliveryMethod,
             DeliveryAddress = deliveryAddress,
             Id = Guid.NewGuid(),
-            BuyerEmail = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email),
-            OrderDate = DateTime.UtcNow,
-            OrderStatus = Enums.OrderStatus.Pending,
-            PaymentStatus = Enums.PaymentStatus.Pending,
+            BuyerEmail = buyerEmail,
             SubTotal = orderItems.Sum(x => x.Quantity * x.Price)
         };
 
@@ -147,7 +145,7 @@ public class OrderService : IOrderService
             {
                 Price = item.Price,
                 Quantity = item.Quantity,
-                ProductName = item.ItemOrdered.ProductName,
+                ProductName = item.ItemOrdered.Name,
                 ImageUrl = item.ItemOrdered.ImageUrl,
                 OrderItemId = item.Id.ToString()
             };
