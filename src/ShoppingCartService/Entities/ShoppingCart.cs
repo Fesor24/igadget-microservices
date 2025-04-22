@@ -12,6 +12,6 @@ public class ShoppingCart
         Id = id;
     }
 
-    public string Id { get; set; }
-    public List<ShoppingCartItems> Items { get; set; } = new();
+    public string Id { get;set; }
+    public List<ShoppingCartItem> Items { get; set; } = [];
 }

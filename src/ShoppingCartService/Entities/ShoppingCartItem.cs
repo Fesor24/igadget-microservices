@@ -1,6 +1,6 @@
 ﻿namespace ShoppingCartService.Entities;
 
-public class ShoppingCartItems
+public sealed class ShoppingCartItem
 {
     public string ProductId { get; set; }
     public string ProductName { get; set; } 
