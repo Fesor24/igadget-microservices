@@ -14,15 +14,18 @@ public static class AuthenticationExtensions
         })
             .AddJwtBearer(opt =>
             {
-                opt.Authority = config["IdentityServiceUrl"];
-                opt.Audience = "orderapi";
+                //opt.Authority = config["IdentityServiceUrl"];
+                opt.Authority = config["Authentication:Issuer"];
+                opt.Audience = config["Authentication:Audience"];
+                //opt.Audience = "orderapi";
                 opt.RequireHttpsMetadata = false;
 
                 opt.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateAudience = true,
+                    ValidAudience = config["Authentication:Audience"],
                     ValidateIssuer = true,
-                    ValidIssuer = config["IdentityServiceUrl"],
+                    ValidIssuer = config["Authentication:Issuer"],
                     ValidTypes = new[] {"at+jwt"},
                 };
             });

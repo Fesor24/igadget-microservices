@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using ProductService.Features.Product.Commands.Create;
-using ProductService.Features.Product.Commands.Delete;
-using ProductService.Features.Product.Commands.Update;
-using ProductService.Features.Product.Queries.GetProductById;
-using ProductService.Features.Product.Queries.GetProducts;
+using ProductService.Features.Products.Commands.Create;
+using ProductService.Features.Products.Commands.Delete;
+using ProductService.Features.Products.Commands.Update;
+using ProductService.Features.Products.Queries.GetProductById;
+using ProductService.Features.Products.Queries.GetProducts;
 using ProductService.Request;
 using Shared.Exceptions;
 
@@ -50,7 +50,7 @@ public class ProductEndpointDefinition : ProductService.Definitions.Contracts.IE
 
         if (!validGuid) throw new ApiBadRequestException($"Invalid param: {id}");
 
-        var request = new GetProductByIdRequest { Id = productId };
+        var request = new GetProductByIdRequest(productId);
 
         var result = await mediator.Send(request);
 

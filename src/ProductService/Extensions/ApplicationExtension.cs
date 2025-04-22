@@ -15,14 +15,7 @@ public static class ApplicationExtension
 {
     public static void AddApplicationServices(this IServiceCollection services, IConfiguration config)
     {
-        services.AddDbContext<ProductDbContext>(opt =>
-        {
-            opt.UseNpgsql(config.GetConnectionString("DefaultConnection"));
-        });
-
-        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        AddPersistence(services, config);
 
         services.AddMediatR(opt =>
         {
@@ -72,6 +65,18 @@ public static class ApplicationExtension
             });
         });
 
+    }
+
+    private static void AddPersistence(IServiceCollection services, IConfiguration config)
+    {
+        services.AddDbContext<ProductDbContext>(opt =>
+        {
+            opt.UseNpgsql(config.GetConnectionString("Database"));
+        });
+
+        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 
     public static void ApplyMigrations(this WebApplication app)

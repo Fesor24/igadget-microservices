@@ -1,8 +1,19 @@
 ﻿namespace ProductService.Entities;
 
-public class Brand
+public sealed class Brand
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; }
-    public List<Product> Products { get; set; }
+    private Brand()
+    {
+        
+    }
+
+    public Brand(Guid id, string name)
+    {
+        Id = id;
+        Name = name;       
+    }
+    
+    public Guid Id { get; private set; }
+    public string Name { get; private set; }
+    public List<Product> Products { get; private set; } = [];
 }

@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using ProductService.Definitions.Contracts;
-using ProductService.Features.Category.Command.Create;
-using ProductService.Features.Category.Queries.GetCategories;
-using ProductService.Features.Category.Queries.GetCategoryById;
+using ProductService.Features.Categories.Command.Create;
+using ProductService.Features.Categories.Queries.GetCategories;
+using ProductService.Features.Categories.Queries.GetCategoryById;
 using ProductService.Request;
 
 namespace ProductService.Definitions;
@@ -37,7 +37,7 @@ public class CategoryEndpointDefinition : IEndpointDefinition
 
     private async Task<IResult> GetCategoryByIdAsync(IMediator mediator, Guid id)
     {
-        var request = new GetCategoryByIdRequest { Id = id };
+        var request = new GetCategoryByIdRequest(id);
 
         var result = await mediator.Send(request);
 
@@ -46,10 +46,7 @@ public class CategoryEndpointDefinition : IEndpointDefinition
 
     private async Task<IResult> CreateCategoryAsync(IMediator mediator, CreateCategoryRequest category)
     {
-        var request = new CreateCategoryCommand
-        {
-            Name = category.Name
-        };
+        var request = new CreateCategoryCommand(category.Name);
 
         var id = await mediator.Send(request);
 

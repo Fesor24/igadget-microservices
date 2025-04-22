@@ -7,17 +7,13 @@ using ProductService.Response;
 
 namespace ProductService.DataAccess.Repository;
 
-public class ProductRepository : GenericRepository<Product>, IProductRepository
+public class ProductRepository(ProductDbContext context) : 
+    GenericRepository<Product>(context), IProductRepository
 {
-    private readonly ProductDbContext _context;
-
-    public ProductRepository(ProductDbContext context) : base(context)
-    {
-        _context = context;
-    }
+    private readonly ProductDbContext _context = context;
 
     public async Task<ProductModel> GetProductDetails(Guid id) =>
-        await _context.Products.Where(x => x.Id == id)
+        await _context.Set<Product>().Where(x => x.Id == id)
             .Include(x => x.Category)
             .Include(x => x.Brand)
             .Select(x => new ProductModel
@@ -34,7 +30,7 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
             .FirstOrDefaultAsync();
 
     public async Task<IReadOnlyList<ProductModel>> GetProductsDetails() =>
-        await _context.Products
+        await _context.Set<Product>()
             .Include(x => x.Category)
             .Include(x => x.Brand)
             .Select(x => new ProductModel

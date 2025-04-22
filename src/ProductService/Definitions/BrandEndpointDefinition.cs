@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using ProductService.Definitions.Contracts;
-using ProductService.Features.Brand.Command.Create;
-using ProductService.Features.Brand.Queries.GetBrandById;
-using ProductService.Features.Brand.Queries.GetBrands;
+using ProductService.Features.Brands.Command.Create;
+using ProductService.Features.Brands.Queries.GetBrandById;
+using ProductService.Features.Brands.Queries.GetBrands;
 using ProductService.Request;
 
 namespace ProductService.Definitions;
@@ -37,10 +37,7 @@ public class BrandEndpointDefinition : IEndpointDefinition
 
     private async Task<IResult> CreateBrandAsync(IMediator mediator, CreateBrandRequest brand)
     {
-        var request = new CreateBrandCommand
-        {
-            Name = brand.Name
-        };
+        var request = new CreateBrandCommand(brand.Name);
 
         var id = await mediator.Send(request);
 
@@ -49,7 +46,7 @@ public class BrandEndpointDefinition : IEndpointDefinition
 
     private async Task<IResult> GetBrandAsync(IMediator mediator, Guid id)
     {
-        var request = new GetBrandByIdRequest { Id = id };
+        var request = new GetBrandByIdRequest(id);
 
         var result = await mediator.Send(request);
 
