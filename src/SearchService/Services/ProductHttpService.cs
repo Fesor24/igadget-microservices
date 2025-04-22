@@ -21,7 +21,7 @@ public class ProductHttpService
 
     public async Task<List<Product>> GetProducts()
     {
-        string prdUrl = $"{_httpClient.BaseAddress}api/products";
+        string prdUrl = $"http://localhost:7001/api/products";
 
         // Commented code was when I had the product service authenticated
         // Authentication has been removed so there is no need for this atm

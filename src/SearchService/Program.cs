@@ -29,7 +29,7 @@ builder.Services.AddMassTransit(opt =>
             host.Password(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
         });
 
-        // Applies to specific endpoint
+        // Bind the consumer to this exchange
         cfg.ReceiveEndpoint("search-product-created", opt =>
         {
             // Add retry in case any error arises when consuming...

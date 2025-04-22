@@ -9,7 +9,7 @@ public static class DbInitializer
 {
     public static async Task InitDb(WebApplication app)
     {
-        await DB.InitAsync("Search", MongoClientSettings.FromConnectionString(
+        await DB.InitAsync("productdb", MongoClientSettings.FromConnectionString(
             app.Configuration.GetConnectionString("MongoDbConnection")));
 
         await DB.Index<Product>()

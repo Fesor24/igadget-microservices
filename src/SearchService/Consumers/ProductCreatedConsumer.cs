@@ -6,7 +6,7 @@ using Shared.Contracts;
 
 namespace SearchService.Consumers;
 
-public class ProductCreatedConsumer : IConsumer<ProductCreated>
+public sealed class ProductCreatedConsumer : IConsumer<ProductCreated>
 {
     private readonly IMapper _mapper;
 
@@ -17,6 +17,7 @@ public class ProductCreatedConsumer : IConsumer<ProductCreated>
 
     public async Task Consume(ConsumeContext<ProductCreated> context)
     {
+        Console.WriteLine("Product Create: Message processing...");
         var product = _mapper.Map<Product>(context.Message);
 
         await product.SaveAsync();

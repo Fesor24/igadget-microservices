@@ -3,15 +3,9 @@ using Shared.Contracts;
 
 namespace ProductService.Consumers;
 
-public class ProductCreatedFaultConsumer : IConsumer<Fault<ProductCreated>>
+public sealed class ProductCreatedFaultConsumer(ILogger<ProductCreatedFaultConsumer> logger) : IConsumer<Fault<ProductCreated>>
 {
-    private readonly ILogger<ProductCreatedFaultConsumer> _logger;
-
-    public ProductCreatedFaultConsumer(ILogger<ProductCreatedFaultConsumer> logger)
-    {
-        _logger = logger;
-    }
-
+    private readonly ILogger<ProductCreatedFaultConsumer> _logger = logger;
     public Task Consume(ConsumeContext<Fault<ProductCreated>> context)
     {
         var exceptions = context.Message.Exceptions;
