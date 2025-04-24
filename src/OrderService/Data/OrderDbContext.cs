@@ -2,13 +2,13 @@
 using OrderService.Entities;
 using OrderService.Entities.OrderAggregate;
 using System.Reflection;
+using OrderService.StateMachine;
 
 namespace OrderService.Data;
 
-public class OrderDbContext(DbContextOptions options) : DbContext(options)
+public partial class OrderDbContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<Order> Order => Set<Order>();
-
     public DbSet<Product> Product => Set<Product>();
     public DbSet<DeliveryMethod> DeliveryMethod => Set<DeliveryMethod>();
 
@@ -17,7 +17,11 @@ public class OrderDbContext(DbContextOptions options) : DbContext(options)
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        
+        OnModelCreatingPartial(modelBuilder);
     }
+    
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

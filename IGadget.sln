@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShippingService", "src\Ship
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService", "src\NotificationService\NotificationService.csproj", "{7FA6A7EF-BA63-4643-9B84-166F3D6E25D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderSaga", "src\OrderSaga\OrderSaga.csproj", "{3B5C0AF8-174C-4D01-B312-7DABDB9039B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -98,6 +100,10 @@ Global
 		{7FA6A7EF-BA63-4643-9B84-166F3D6E25D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FA6A7EF-BA63-4643-9B84-166F3D6E25D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FA6A7EF-BA63-4643-9B84-166F3D6E25D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B5C0AF8-174C-4D01-B312-7DABDB9039B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B5C0AF8-174C-4D01-B312-7DABDB9039B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B5C0AF8-174C-4D01-B312-7DABDB9039B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B5C0AF8-174C-4D01-B312-7DABDB9039B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -116,6 +122,7 @@ Global
 		{C9392484-1953-48C8-8766-170FEB20C6A8} = {B7121C97-1D21-4968-9317-E0198A2A26D6}
 		{31BB3C65-A0F3-4141-A9B9-78303F9C9825} = {EB39C275-6399-403F-B3DE-85E12277CC77}
 		{7FA6A7EF-BA63-4643-9B84-166F3D6E25D6} = {EB39C275-6399-403F-B3DE-85E12277CC77}
+		{3B5C0AF8-174C-4D01-B312-7DABDB9039B0} = {EB39C275-6399-403F-B3DE-85E12277CC77}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5B1B734B-46DD-46C2-88ED-6825ACED173A}
