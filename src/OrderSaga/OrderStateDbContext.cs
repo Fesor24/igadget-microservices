@@ -11,4 +11,12 @@ public class OrderStateDbContext : DbContext
     }
     
     public DbSet<OrderStateData> OrderState  => Set<OrderStateData>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<OrderStateData>()
+            .ToTable("OrderState", "ord")
+            .HasKey(ord => ord.OrderId);
+        base.OnModelCreating(modelBuilder);
+    }
 }

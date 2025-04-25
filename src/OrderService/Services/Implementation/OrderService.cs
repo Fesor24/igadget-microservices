@@ -10,6 +10,10 @@ using OrderService.Response;
 using OrderService.Services.Contracts;
 using Shared.Exceptions;
 using System.Security.Claims;
+using MassTransit;
+using OrderService.Enums;
+using Shared.Contracts;
+using Shared.Contracts.Commands;
 using OrderEntity = OrderService.Entities.OrderAggregate.Order;
 
 namespace OrderService.Services.Implementation;
@@ -19,13 +23,15 @@ public sealed class OrderService : IOrderService
     private readonly IUnitOfWork _unitOfWork;
     private readonly IGrpcClient _grpcClient;
     private readonly IHttpContextAccessor _contextAccessor;
+    private readonly IPublishEndpoint _publishEndpoint;
 
     public OrderService(IUnitOfWork unitOfWork, IGrpcClient grpcClient, 
-        IHttpContextAccessor contextAccessor)
+        IHttpContextAccessor contextAccessor, IPublishEndpoint publishEndpoint)
     {
         _unitOfWork = unitOfWork;
         _grpcClient = grpcClient;
         _contextAccessor = contextAccessor;
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest orderRequest)
@@ -111,6 +117,9 @@ public sealed class OrderService : IOrderService
         else
             throw new ApiBadRequestException("An error occurred while creating this order");
 
+        OrderCreated orderCreated = new(order.Id);
+        await _publishEndpoint.Publish(orderCreated);
+
         return new CreateOrderResponse
         {
             PaymentStatus = Enums.PaymentStatus.Pending.ToString(),
@@ -165,7 +174,37 @@ public sealed class OrderService : IOrderService
             Date = order.OrderDate.ToString("dd ddd MMM yyyy HH:mm")
         };
     }
-       
+
+    public async Task<bool> CancellationRequest(Guid orderId)
+    {
+        CancellationRequested cancellationRequested = new(orderId);
+        await _publishEndpoint.Publish(cancellationRequested);
+        
+        return await Task.FromResult(true);
+    }
+
+    public async Task CancelOrderAsync(Guid orderId)
+    {
+        var spec = new GetOrderSpecification(orderId);
+        
+        var order = await _unitOfWork.Repository<OrderEntity>().GetAsync(spec);
+        
+        if(order is null)
+            throw new ApiNotFoundException($"Order with id: {orderId} not found");
+        
+        if(order.OrderStatus != OrderStatus.Pending)
+            throw new ApiBadRequestException("Order is not in pending state");
+        
+        order.OrderStatus = OrderStatus.Cancelled;
+        
+        _unitOfWork.Repository<OrderEntity>().Update(order);
+        
+        await _unitOfWork.Complete();
+        
+        OrderCancelled orderCancelled = new(orderId);
+        await _publishEndpoint.Publish(orderCancelled);
+    }
+
     public async Task<IReadOnlyList<GetOrderResponse>> GetOrdersForUserAsync()
     {
         var email = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);

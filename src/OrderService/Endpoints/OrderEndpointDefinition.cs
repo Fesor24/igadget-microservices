@@ -35,6 +35,9 @@ public class OrderEndpointDefinition : IEndpointDefinition
         order.MapGet("/user", GetOrdersForUser)
             .RequireAuthorization();
 
+        order.MapPut("/cancel-request", CancellationRequest)
+            .RequireAuthorization();
+
     }
 
     private static async Task<IResult> CreateOrder(CreateOrderRequest orderRequest, IOrderService orderService)
@@ -49,4 +52,7 @@ public class OrderEndpointDefinition : IEndpointDefinition
 
     private static async Task<IResult> GetOrdersForUser(IOrderService orderService) =>
         Results.Ok(await orderService.GetOrdersForUserAsync());
+
+    private static async Task<IResult> CancellationRequest(Guid orderId, IOrderService orderService) =>
+        Results.Ok(await orderService.CancellationRequest(orderId));
 }

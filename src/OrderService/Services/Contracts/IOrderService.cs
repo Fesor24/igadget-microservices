@@ -11,4 +11,6 @@ public interface IOrderService
     Task<IReadOnlyList<GetOrderResponse>> GetOrdersForUserAsync();
 
     Task<GetOrderResponse> GetOrderByIdAsync(Guid id);
+    Task<bool> CancellationRequest(Guid orderId);
+    Task CancelOrderAsync(Guid orderId);
 }

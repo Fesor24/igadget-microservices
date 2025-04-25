@@ -17,6 +17,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     public async Task AddAsync(T entity) =>
         await _context.Set<T>().AddAsync(entity);
 
+    public void Update(T entity)
+    {
+        _context.Attach(entity);
+        _context.Entry(entity).State = EntityState.Modified;
+    }
+
     public async Task<List<T>> GetAllAsync(ISpecification<T> spec) =>
         await ApplySpecification(spec).ToListAsync();
 

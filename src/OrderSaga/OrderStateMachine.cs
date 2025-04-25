@@ -8,17 +8,17 @@ namespace OrderSaga;
 
 public sealed class OrderStateMachine : MassTransitStateMachine<OrderStateData>
 {
-    public State Created { get; private set; }
     public State Pending { get; private set; }
     public State Paid { get; private set; }
-    public State Shipped { get; private set; }
+    public State CancellationRequested { get; private set; }
     public State Cancelled { get; private set; }
+    public State Completed { get; private set; }    
     
     public Event<OrderCreated> OrderCreated { get; private set; }
     public Event<OrderPaid> OrderPaid { get; private set; }
-    public Event<OrderShipped> OrderShipped { get; private set; }
-    public Event<CancellationRequested> CancellationRequested { get; private set; }
+    public Event<CancellationRequested> OrderCancellationRequested { get; private set; }
     public Event<OrderCancelled> OrderCancelled { get; private set; }
+    public Event<OrderCompleted> OrderCompleted { get; private set; }
 
     public OrderStateMachine()
     {
@@ -32,14 +32,17 @@ public sealed class OrderStateMachine : MassTransitStateMachine<OrderStateData>
         Event(() => OrderPaid,
             x => x.CorrelateById(context => context.Message.OrderId));
 
-        Event(() => CancellationRequested,
+        Event(() => OrderCancellationRequested,
             x => x.CorrelateById(context => context.Message.OrderId));
         
         Event(() => OrderCancelled,
             x => x.CorrelateById(context => context.Message.OrderId));
+
+        Event(() => OrderCompleted,
+            x => x.CorrelateById(context => context.Message.OrderId));
         
         Initially(
-            When(OrderCreated) // when an order is created...
+            When(OrderCreated) // when an order is created...an OrderCreated message was published...
                 .Then(context =>
                 {
                     context.Saga.OrderId = context.Message.OrderId;
@@ -69,29 +72,52 @@ public sealed class OrderStateMachine : MassTransitStateMachine<OrderStateData>
                 ).Publish(context => new OrderShipped(context.Message.OrderId)),
             
             // we handle the second part of the scenario...
-            When(CancellationRequested)
+            When(OrderCancellationRequested)
                 .Then(context =>
                 {
                     context.Saga.OrderId = context.Message.OrderId;
-                    context.Saga.OrderStatus = OrderStatus.Cancelled;
+                    context.Saga.OrderStatus = OrderStatus.CancellationRequested;
                     
-                    Console.WriteLine($"Order Cancelled at {DateTime.Now:MM/dd/yyyy} with Id: {context.Message.OrderId}");
+                    Console.WriteLine($"Order cancellation requested at {DateTime.Now:g} with Id: {context.Message.OrderId}");
                 })
-                .TransitionTo(Cancelled)
+                .TransitionTo(CancellationRequested)
                 .Publish(context => new OrderCancelled(context.Message.OrderId)) // say we want to notify the customer that the order has been cancelled...
             );
         
         // when it is in a paid state and an order cancellation is requested
         // we refund user...
         During(Paid,
-            When(CancellationRequested)
+            When(OrderCancellationRequested)
+                .Then(context =>
+                {
+                    context.Saga.OrderId = context.Message.OrderId;
+                    context.Saga.OrderStatus = OrderStatus.CancellationRequested;
+                })
+                .Publish(context => new OrderPaymentRefund(context.Message.OrderId))
+                .Publish(context => new OrderCancelled(context.Message.OrderId))
+            
+        );
+        
+        During(CancellationRequested,
+            When(OrderCancelled)
                 .Then(context =>
                 {
                     context.Saga.OrderId = context.Message.OrderId;
                     context.Saga.OrderStatus = OrderStatus.Cancelled;
-                })
-                .Publish(context => new OrderPaymentRefund(context.Message.OrderId))
-            
-        );
+                    
+                    Console.WriteLine($"Order cancelled at {DateTime.Now:g} with Id: {context.Message.OrderId}");
+                }).TransitionTo(Cancelled)
+            );
+        
+        During(CancellationRequested, Cancelled,
+            Ignore(OrderCancellationRequested));
+        
+        During(Paid,
+            Ignore(OrderPaid));
+        
+        // During any state
+        // when an OrderCompleted event is published...
+        DuringAny(When(OrderCompleted).Finalize()); // transitions to the final state...
+        SetCompletedWhenFinalized();// removes the state instance from db...
     }
 }
