@@ -3,12 +3,17 @@ using Shared.Contracts;
 
 namespace OrderService.Consumers;
 
-public sealed class OrderCancelledConsumer : IConsumer<OrderCancelled>
+public sealed class OrderCancelledConsumer(IPublishEndpoint publishEndpoint) : IConsumer<OrderCancelled>
 {
-    public Task Consume(ConsumeContext<OrderCancelled> context)
+    private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
+    public async Task Consume(ConsumeContext<OrderCancelled> context)
     {
         Console.WriteLine("Order cancelled...");
         Console.WriteLine(context.Message.OrderId + " is the order id");
-        return Task.CompletedTask;
+        // logic to handle cancellation...
+        
+        // if cancellation successful, raise order completion event so the state instance is finalized and removed...
+        OrderCompleted orderCompleted = new(context.Message.OrderId);
+        await _publishEndpoint.Publish(orderCompleted);
     }
 }
